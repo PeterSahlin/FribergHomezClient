@@ -1,4 +1,5 @@
-﻿@page "/Category"
+﻿@* @page "/Category" *@
+@using FribergHomezClient.Components
 @using FribergHomezClient.Models
 @using System.Net.Http.Json
 @using System.Text.Json
@@ -7,8 +8,6 @@
 <PageTitle>Category</PageTitle>
 
 <h1>Categories</h1>
-
-
 
 @if (CategoryList == null)
 {
@@ -33,7 +32,7 @@ else
     </table>
 }
 
-//code
+
 @code {
     public List<Category>? CategoryList;
 
@@ -43,37 +42,9 @@ else
         var response = await httpClient.GetAsync("/api/category");
         if(response.IsSuccessStatusCode)
         {
-            
             CategoryList = await response.Content.ReadFromJsonAsync<List<Category>>();
         }
 
     }
 
-  
-
-        // HttpResponseMessage response = await httpClient.GetAsync("/api/category");
-
-        // if (response.IsSuccessStatusCode)
-        // {
-        //     string jsonContent = await response.Content.ReadAsStringAsync();
-
-        //     categories = JsonSerializer.Deserialize<List<Category>>(jsonContent);
-        // }
-    // private WeatherForecast[]? forecasts;
-
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
-    // }
-
-    // public class WeatherForecast
-    // {
-    //     public DateOnly Date { get; set; }
-
-    //     public int TemperatureC { get; set; }
-
-    //     public string? Summary { get; set; }
-
-    //     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    // }
 }

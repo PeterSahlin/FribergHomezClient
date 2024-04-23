@@ -101,3 +101,10 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+
+/*Our own CSS*/
+
+.saleObjectImage {
+    width: 200px;
+}

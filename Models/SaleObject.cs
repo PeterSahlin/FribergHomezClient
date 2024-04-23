@@ -11,10 +11,14 @@
         public string Description { get; set; }
         public int NumberOfRooms { get; set; }
         public int MonthlyFee { get; set; }
-        public int AnnualOperatingCost { get; set; }
-        public int ConstructionYear { get; set; }
+        public int OperatingCostPerYear { get; set; }
+        public int YearOfConstruction { get; set; }
         public int CategoryId { get; set; }
         public int? RealEstateAgentId { get; set; }
         public int MunicipalityId { get; set; }
+        public List<string> ImageUrl { get; set; } = new List<string>();
+
+
+
     }
 }

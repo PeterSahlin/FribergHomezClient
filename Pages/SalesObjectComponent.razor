@@ -4,11 +4,16 @@
 @using System.Text.Json
 @inject HttpClient httpClient
 
+
+<img class="saleObjectImage" src="images/FribergHomezLogo.jpeg" />
+
+
+
 <PageTitle>Sale Objects</PageTitle>
 
 <h1>Sales Objects</h1>
 
-@if (SaleObjects != null)
+@if (SaleObjects == null)
 {
     <p> Couldn't load sale objects.</p>
 }
@@ -26,11 +31,12 @@ else
                 <th>Description</th>
                 <th>NumberOfRooms</th>
                 <th>MonthlyFee</th>
-                <th>AnnualOperatingCost</th>
-                <th>ConstructionYear</th>
+                <th>Operating Cost Per Year</th>
+                <th>Year of Construction</th>
                 <th>CategoryId</th>
                 <th>RealEstateAgentId</th>
                 <th>MunicipalityId</th>
+                <th>Images</th>
             </tr>
         </thead>
         <tbody>
@@ -45,12 +51,17 @@ else
                     <td>@item.Description</td>
                     <td>@item.NumberOfRooms</td>
                     <td>@item.MonthlyFee</td>
-                    <td>@item.AnnualOperatingCost</td>
-                    <td>@item.ConstructionYear</td>
+                    <td>@item.OperatingCostPerYear</td>
+                    <td>@item.YearOfConstruction</td>
                     <td>@item.CategoryId</td>
                     <td>@item.RealEstateAgentId</td>
                     <td>@item.MunicipalityId</td>
-
+                    <td>
+                        @foreach (var image in item.ImageUrl)
+                        {
+                            <img class="saleObjectImage" src=@image />
+                        }
+                    </td>
                 </tr>
             }
         </tbody>
@@ -60,9 +71,9 @@ else
 
 @code {
     public List<SaleObject>? SaleObjects;
-
     protected override async Task OnInitializedAsync()
     {
+        
         var response = await httpClient.GetAsync("/api/salesobject");
         if (response.IsSuccessStatusCode)
         {
@@ -70,3 +81,4 @@ else
         }
     }
 }
+
