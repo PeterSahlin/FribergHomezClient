@@ -1,0 +1,72 @@
+﻿@page "/SalesObjectComponent"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+
+<PageTitle>Sale Objects</PageTitle>
+
+<h1>Sales Objects</h1>
+
+@if (SaleObjects != null)
+{
+    <p> Couldn't load sale objects.</p>
+}
+
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Adress</th>
+                <th>StartingPrice</th>
+                <th>LivingArea</th>
+                <th>AncillaryArea</th>
+                <th>PlotArea</th>
+                <th>Description</th>
+                <th>NumberOfRooms</th>
+                <th>MonthlyFee</th>
+                <th>AnnualOperatingCost</th>
+                <th>ConstructionYear</th>
+                <th>CategoryId</th>
+                <th>RealEstateAgentId</th>
+                <th>MunicipalityId</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in SaleObjects)
+            {
+                <tr>
+                    <td>@item.Address</td>
+                    <td>@item.StartingPrice</td>
+                    <td>@item.LivingArea</td>
+                    <td>@item.AncillaryArea</td>
+                    <td>@item.PlotArea</td>
+                    <td>@item.Description</td>
+                    <td>@item.NumberOfRooms</td>
+                    <td>@item.MonthlyFee</td>
+                    <td>@item.AnnualOperatingCost</td>
+                    <td>@item.ConstructionYear</td>
+                    <td>@item.CategoryId</td>
+                    <td>@item.RealEstateAgentId</td>
+                    <td>@item.MunicipalityId</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    public List<SaleObject>? SaleObjects;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync("/api/salesobject");
+        if (response.IsSuccessStatusCode)
+        {
+            SaleObjects = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
+        }
+    }
+}
