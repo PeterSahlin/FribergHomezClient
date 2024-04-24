@@ -1,0 +1,167 @@
+﻿@page "/AddSaleObject"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+
+
+@*Henrik*@
+
+<h1>Lägg till nytt objekt</h1>
+
+<div>
+    <label for="addressInput">Adress:</label>
+    <input type="text" id="addressInput" @bind="newAddress" />
+</div>
+
+<div>
+    <label for="startingPriceInput">Utgångspris:</label>
+    <input type="number" id="startingPriceInput" @bind="newStartingPrice" />
+</div>
+<div>
+    <label for="LivingAreaInput">Boarea:</label>
+    <input type="number" id="LivingAreaInput" @bind="newLivingArea" />
+</div>
+<div>
+    <label for="newAncillaryAreaInput">Biarea:</label>
+    <input type="number" id="newAncillaryAreaInput" @bind="newAncillaryArea" />
+</div>
+<div>
+    <label for="newPlotAreaInput">Tomtarea:</label>
+    <input type="number" id="newPlotAreaInput" @bind="newPlotArea" />
+</div>
+<div>
+    <label for="newDescriptionInput">Beskrivning:</label>
+    <input type="text" id="newDescriptionInput" @bind="newDescription" />
+</div>
+<div>
+    <label for="newNumberOfRoomsInput">Antal rum:</label>
+    <input type="number" id="newNumberOfRoomsInput" @bind="newNumberOfRooms" />
+</div>
+<div>
+    <label for="newMonthlyFeeInput">Månadsavgift:</label>
+    <input type="number" id="newMonthlyFeeInput" @bind="newMonthlyFee" />
+</div>
+<div>
+    <label for="newOperatingCostPerYearInput">Årsavgift:</label>
+    <input type="number" id="newOperatingCostPerYearInput" @bind="newOperatingCostPerYear" />
+</div>
+<div>
+    <label for="newYearOfConstructionInput">Byggår:</label>
+    <input type="number" id="newYearOfConstructionInput" @bind="newYearOfConstruction" />
+</div>
+
+<div>
+    <label for="categoryDropdown">Kategori:</label>
+    <select id="categoryDropdown" @bind="newCategoryId">
+        <option value="">Select Category</option>
+        @foreach (var category in Categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </select>
+</div>
+
+<div>
+    <label for="municipalityDropdown">Kommun:</label>
+    <select id="municipalityDropdown" @bind="newMunicipalityId">
+        <option value="">Välj kommun</option>
+        @foreach (var municipality in Municipalities)
+        {
+            <option value="@municipality.Id">@municipality.Name</option>
+        }
+    </select>
+</div>
+
+<div>
+    <label for="realEstateAgentDropdown">Mäklare:</label>
+    <select id="realEstateAgentDropdown" @bind="newRealEstateId">
+        <option value="">Välj mäklare</option>
+        @foreach (var agent in RealEstateAgents)
+        {
+            <option value="@agent.Id">@agent.FirstName @agent.LastName</option>
+        }
+    </select>
+</div>
+
+
+
+<button @onclick="AddNewSaleObject">Save</button>
+
+@code {
+    private string newAddress = "";
+    private int newStartingPrice = 0;
+    private int newLivingArea = 0;
+    private int newAncillaryArea = 0;
+    private int newPlotArea = 0;
+    private string newDescription = "";
+    private int newNumberOfRooms = 0;
+    private int newMonthlyFee = 0;
+    private int newOperatingCostPerYear = 0;
+    private int newYearOfConstruction = 0;
+    private int newCategoryId = 0;
+    private int newMunicipalityId = 0;
+    private int newRealEstateId = 0;
+
+    public List<Category>? Categories = new List<Category>();
+    public List<Municipality>? Municipalities = new List<Municipality>();
+    public List<RealEstateAgent>? RealEstateAgents = new List<RealEstateAgent>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var categoryResponse = await httpClient.GetAsync("/api/Category");
+        if (categoryResponse.IsSuccessStatusCode)
+        {
+            Categories = await categoryResponse.Content.ReadFromJsonAsync<List<Category>>();
+        }
+        var municipalityResponse = await httpClient.GetAsync("/api/municipalities");
+        if (municipalityResponse.IsSuccessStatusCode)
+        {
+            Municipalities = await municipalityResponse.Content.ReadFromJsonAsync<List<Municipality>>();
+        }
+        var agentResponse = await httpClient.GetAsync("/api/RealEstateAgent");
+        if (agentResponse.IsSuccessStatusCode)
+        {
+            RealEstateAgents = await agentResponse.Content.ReadFromJsonAsync<List<RealEstateAgent>>();
+        }
+    }
+
+    private async Task AddNewSaleObject()
+    {
+        var newSaleObject = new SaleObject
+            {
+                Address = newAddress,
+                StartingPrice = newStartingPrice,
+                LivingArea = newLivingArea,
+                AncillaryArea = newAncillaryArea,
+                PlotArea = newPlotArea,
+                Description = newDescription,
+                NumberOfRooms = newNumberOfRooms,
+                MonthlyFee = newMonthlyFee,
+                OperatingCostPerYear = newOperatingCostPerYear,
+                YearOfConstruction = newYearOfConstruction,
+                CategoryId = newCategoryId,
+                MunicipalityId = newMunicipalityId,
+                RealEstateAgentId = newRealEstateId
+
+            };
+
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync("/api/salesobject", newSaleObject);
+            if (response.IsSuccessStatusCode)
+            {
+                navMan.NavigateTo("/SalesObjectComponent");
+            }
+            else
+            {
+                Console.WriteLine("Kunde inte lägga till objekt");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+}

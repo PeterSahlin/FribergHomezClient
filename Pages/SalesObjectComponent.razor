@@ -3,6 +3,7 @@
 @using System.Net.Http.Json
 @using System.Text.Json
 @inject HttpClient httpClient
+@inject NavigationManager navMan
 
 
 <img class="saleObjectImage" src="images/FribergHomezLogo.jpeg" />
@@ -12,7 +13,9 @@
 <PageTitle>Våra bostäder</PageTitle>
 
 <h1>Sales Objects</h1>
-
+<div>
+    <button @onclick="NavigateToAddSaleObjectPage">Add New Sale Object</button>
+</div>
 
 <div>  <FribergHomezClient.Components.SearchBox Items="SaleObjects" OnSearch="UpdateFilteredSearchAsync"></FribergHomezClient.Components.SearchBox> </div>
 
@@ -62,7 +65,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in FilteredSaleObject)
+            @foreach (var item in FilteredObjects)
             {
                 <tr>
                     <td>@item.Address</td>
@@ -109,7 +112,7 @@ else
 
             FilteredObjects = SaleObjects;
 
-            
+
         }
         var municipalityResponse = await httpClient.GetAsync("/api/municipalities");
         if (municipalityResponse.IsSuccessStatusCode)
@@ -122,11 +125,11 @@ else
         var selectedMunicipalityId = Convert.ToInt32(e.Value);
         if (selectedMunicipalityId == 0)
         {
-            FilteredSaleObject = SaleObjects;
+            FilteredObjects = SaleObjects;
         }
         else
         {
-            FilteredSaleObject = SaleObjects.Where(s => s.MunicipalityId == selectedMunicipalityId).ToList();
+            FilteredObjects = SaleObjects.Where(s => s.MunicipalityId == selectedMunicipalityId).ToList();
 
         }
     }
@@ -154,6 +157,10 @@ else
             ).ToList();
         SaleObjects = FilteredObjects;
 
+    }
+    private void NavigateToAddSaleObjectPage()
+    {
+        navMan.NavigateTo("/AddSaleObject");
     }
 }
 
