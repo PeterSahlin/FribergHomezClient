@@ -18,9 +18,11 @@
         public int MunicipalityId { get; set; }
         public List<string> ImageUrl { get; set; } = new List<string>();
 
+
         public RealEstateAgent RealEstateAgent { get; set; }
         public Municipality Municipality { get; set; }
         public Category Category { get; set; }
+
 
 
 
