@@ -51,7 +51,10 @@
     <label for="newYearOfConstructionInput">Byggår:</label>
     <input type="number" id="newYearOfConstructionInput" @bind="newYearOfConstruction" />
 </div>
-
+<div>
+    <input type="text" @bind="addNewImgUrl" />
+    <button @onclick="AddImgUrl">Lägg till bild</button>
+</div>
 <div>
     <label for="categoryDropdown">Kategori:</label>
     <select id="categoryDropdown" @bind="newCategoryId">
@@ -103,6 +106,8 @@
     private int newCategoryId = 0;
     private int newMunicipalityId = 0;
     private int newRealEstateId = 0;
+    public List<string> newImgUrl = new List<string>();
+    private string addNewImgUrl;
 
     public List<Category>? Categories = new List<Category>();
     public List<Municipality>? Municipalities = new List<Municipality>();
@@ -143,8 +148,8 @@
                 YearOfConstruction = newYearOfConstruction,
                 CategoryId = newCategoryId,
                 MunicipalityId = newMunicipalityId,
-                RealEstateAgentId = newRealEstateId
-
+                RealEstateAgentId = newRealEstateId,
+                ImageUrl = newImgUrl
             };
 
         try
@@ -162,6 +167,14 @@
         catch (Exception ex)
         {
             Console.WriteLine(ex);
+        }
+    }
+    private void AddImgUrl()
+    {
+        if (!string.IsNullOrEmpty(addNewImgUrl))
+        {
+            newImgUrl.Add(addNewImgUrl);
+            addNewImgUrl = string.Empty;
         }
     }
 }

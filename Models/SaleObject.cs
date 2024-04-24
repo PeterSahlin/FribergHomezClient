@@ -3,6 +3,7 @@
     public class SaleObject
     {
         //properties from API DTO
+        public int Id { get; set; }
         public string Address { get; set; }
         public int StartingPrice { get; set; }
         public int LivingArea { get; set; }
