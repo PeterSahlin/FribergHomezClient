@@ -9,9 +9,17 @@
 
 
 
-<PageTitle>Sale Objects</PageTitle>
+<PageTitle>Våra bostäder</PageTitle>
 
 <h1>Sales Objects</h1>
+
+<div>  <FribergHomezClient.Components.SearchBox Items="SaleObjects" OnSearch="UpdateFilteredSearchAsync"></FribergHomezClient.Components.SearchBox> </div>
+
+
+
+
+
+
 
 @if (SaleObjects == null)
 {
@@ -24,19 +32,20 @@ else
         <thead>
             <tr>
                 <th>Adress</th>
-                <th>StartingPrice</th>
-                <th>LivingArea</th>
-                <th>AncillaryArea</th>
-                <th>PlotArea</th>
-                <th>Description</th>
-                <th>NumberOfRooms</th>
-                <th>MonthlyFee</th>
-                <th>Operating Cost Per Year</th>
-                <th>Year of Construction</th>
-                <th>CategoryId</th>
-                <th>RealEstateAgentId</th>
-                <th>MunicipalityId</th>
-                <th>Images</th>
+                <th>Utgångspris</th>
+                <th>Boarea</th>
+                <th>Biarea</th>
+                <th>Tomtarea</th>
+                <th>Beskrivning</th>
+                <th>Antal rum</th>
+                <th>Månadskostnad</th>
+                <th>Årskostnad</th>
+                <th>Byggår</th>
+                <th>Bilder</th>
+                <th>Mäklare</th>
+                <th>Kategori</th>
+                <th>Kommun</th>
+              
             </tr>
         </thead>
         <tbody>
@@ -53,15 +62,16 @@ else
                     <td>@item.MonthlyFee</td>
                     <td>@item.OperatingCostPerYear</td>
                     <td>@item.YearOfConstruction</td>
-                    <td>@item.CategoryId</td>
-                    <td>@item.RealEstateAgentId</td>
-                    <td>@item.MunicipalityId</td>
+                    <td>@item.RealEstateAgent.FirstName @item.RealEstateAgent.LastName</td>
+               
                     <td>
                         @foreach (var image in item.ImageUrl)
                         {
                             <img class="saleObjectImage" src=@image />
                         }
                     </td>
+                    <td>@item.Category.Name</td>
+                    <td>@item.Municipality.Name</td>
                 </tr>
             }
         </tbody>
@@ -71,14 +81,41 @@ else
 
 @code {
     public List<SaleObject>? SaleObjects;
+    public List<SaleObject>? FilteredObjects;
     protected override async Task OnInitializedAsync()
     {
-        
+
         var response = await httpClient.GetAsync("/api/salesobject");
         if (response.IsSuccessStatusCode)
         {
             SaleObjects = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
+            FilteredObjects = SaleObjects;
         }
+    }
+
+    //Peter
+    public async Task UpdateFilteredSearchAsync(string search)
+    {
+        OnInitializedAsync();
+        if (search == null)
+        {
+            FilteredObjects = SaleObjects;
+            
+        }
+        FilteredObjects = SaleObjects.Where(o =>
+            o.Address.Contains(search) ||
+            o.StartingPrice.ToString().Contains(search) ||
+            o.LivingArea.ToString().Contains(search) ||
+            o.AncillaryArea.ToString().Contains(search) ||
+            o.PlotArea.ToString().Contains(search) ||
+            o.Description.Contains(search) ||
+            o.NumberOfRooms.ToString().Contains(search) ||
+            o.MonthlyFee.ToString().Contains(search) ||
+            o.OperatingCostPerYear.ToString().Contains(search) ||
+            o.YearOfConstruction.ToString().Contains(search)
+            ).ToList();
+        SaleObjects = FilteredObjects;
+
     }
 }
 
