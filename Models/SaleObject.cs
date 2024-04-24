@@ -17,8 +17,5 @@
         public int? RealEstateAgentId { get; set; }
         public int MunicipalityId { get; set; }
         public List<string> ImageUrl { get; set; } = new List<string>();
-
-
-
     }
 }

@@ -13,6 +13,17 @@
 
 <h1>Sales Objects</h1>
 
+<div>
+    <label for="municipalityDropdown">Select Municipality: </label>
+    <select id="municipalityDropdown" @onchange="HandleMunicipalityChangeDropDown">
+        <option value="0">All Municipalities</option>
+        @foreach (var municipality in Municipalities)
+        {
+            <option value="@municipality.Id">@municipality.Name</option>
+        }
+    </select>
+</div>
+
 @if (SaleObjects == null)
 {
     <p> Couldn't load sale objects.</p>
@@ -40,7 +51,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in SaleObjects)
+            @foreach (var item in FilteredSaleObject)
             {
                 <tr>
                     <td>@item.Address</td>
@@ -71,13 +82,33 @@ else
 
 @code {
     public List<SaleObject>? SaleObjects;
+    public List<SaleObject>? FilteredSaleObject;
+    public List<Municipality> Municipalities = new List<Municipality>();
     protected override async Task OnInitializedAsync()
     {
-        
+
         var response = await httpClient.GetAsync("/api/salesobject");
         if (response.IsSuccessStatusCode)
         {
             SaleObjects = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
+            FilteredSaleObject = SaleObjects;
+        }
+        var municipalityResponse = await httpClient.GetAsync("/api/municipalities");
+        if (municipalityResponse.IsSuccessStatusCode)
+        {
+            Municipalities = await municipalityResponse.Content.ReadFromJsonAsync<List<Municipality>>();
+        }
+    }
+    private void HandleMunicipalityChangeDropDown(ChangeEventArgs e)
+    {
+        var selectedMunicipalityId = Convert.ToInt32(e.Value);
+        if (selectedMunicipalityId == 0)
+        {
+            FilteredSaleObject = SaleObjects;
+        }
+        else
+        {
+            FilteredSaleObject = SaleObjects.Where(s => s.MunicipalityId == selectedMunicipalityId).ToList();
         }
     }
 }
