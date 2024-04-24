@@ -12,7 +12,10 @@
 
 <PageTitle>Våra bostäder</PageTitle>
 
-<h1>Sales Objects</h1>
+
+<h1>Våra bostäder</h1>
+
+
 <div>
     <button @onclick="NavigateToAddSaleObjectPage">Add New Sale Object</button>
 </div>
@@ -22,13 +25,23 @@
 
 
 
+@* <div>  <FribergHomezClient.Components.SearchBox Items="SaleObjects" OnSearch="UpdateFilteredSearchAsync"></FribergHomezClient.Components.SearchBox> </div> *@
 
+<input class="form-control" style="max-width:600px" placeholder="Sök..."
+       @bind="searchItem" />
+
+<button @onclick=SearchAsync>
+    Sök
+</button>
+<button @onclick=ResetSearch>
+    Rensa
+</button>
 
 
 <div>
-    <label for="municipalityDropdown">Select Municipality: </label>
+    <label for="municipalityDropdown">Välj kommun: </label>
     <select id="municipalityDropdown" @onchange="HandleMunicipalityChangeDropDown">
-        <option value="0">All Municipalities</option>
+        <option value="0">Alla kommuner</option>
         @foreach (var municipality in Municipalities)
         {
             <option value="@municipality.Id">@municipality.Name</option>
@@ -61,7 +74,7 @@ else
                 <th>Mäklare</th>
                 <th>Kategori</th>
                 <th>Kommun</th>
-              
+
             </tr>
         </thead>
         <tbody>
@@ -72,14 +85,14 @@ else
                     <td>@item.StartingPrice</td>
                     <td>@item.LivingArea</td>
                     <td>@item.AncillaryArea</td>
-                    <td>@item.PlotArea</td>
+                    <td>@item.PlotArea</td>d
                     <td>@item.Description</td>
                     <td>@item.NumberOfRooms</td>
                     <td>@item.MonthlyFee</td>
                     <td>@item.OperatingCostPerYear</td>
                     <td>@item.YearOfConstruction</td>
                     <td>@item.RealEstateAgent.FirstName @item.RealEstateAgent.LastName</td>
-               
+
                     <td>
                         @foreach (var image in item.ImageUrl)
                         {
@@ -96,6 +109,10 @@ else
 
 
 @code {
+
+    private string searchItem;
+
+
     public List<SaleObject>? SaleObjects;
 
     public List<SaleObject>? FilteredObjects;
@@ -135,13 +152,16 @@ else
     }
 
     //Peter
-    public async Task UpdateFilteredSearchAsync(string search)
+    public async Task SearchAsync()
     {
-        OnInitializedAsync();
+        await OnInitializedAsync();
+
+        string search = searchItem;
+
         if (search == null)
         {
             FilteredObjects = SaleObjects;
-            
+
         }
         FilteredObjects = SaleObjects.Where(o =>
             o.Address.Contains(search) ||
@@ -158,9 +178,16 @@ else
         SaleObjects = FilteredObjects;
 
     }
+
+
+    private async Task ResetSearch()
+    {
+        await OnInitializedAsync();
+
     private void NavigateToAddSaleObjectPage()
     {
         navMan.NavigateTo("/AddSaleObject");
+
     }
 }
 
