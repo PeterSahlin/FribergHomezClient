@@ -103,6 +103,7 @@ else
                     <td>@item.Category.Name</td>
                     <td>@item.Municipality.Name</td>
                     <td><button @onclick="@(e => NavigateToSaleObjectDetails(item.Id))">Detaljer</button></td>
+                    <td><button @onclick="@(e => NavigateToEditSaleObject(item.Id))">Redigera</button></td>
                 </tr>
             }
         </tbody>
@@ -187,6 +188,10 @@ else
     private void NavigateToSaleObjectDetails(int id)
     {
         navMan.NavigateTo($"/SaleObjectDetails/{id}");
+    }
+    private void NavigateToEditSaleObject(int id)
+    {
+        navMan.NavigateTo($"/EditSaleObject/{id}");
     }
 }
 
