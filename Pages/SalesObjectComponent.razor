@@ -108,6 +108,7 @@ else
         </tbody>
     </table>
 }
+}
 
 
 @code {
@@ -187,14 +188,17 @@ else
     }
 
     private void NavigateToAddSaleObjectPage()
-    {
-        navMan.NavigateTo("/AddSaleObject");
+        {
+            navMan.NavigateTo("/AddSaleObject");
 
+        }
     }
+
     private void NavigateToSaleObjectDetails(int id)
     {
         navMan.NavigateTo($"/SaleObjectDetails/{id}");
     }
 }
+
 
 
