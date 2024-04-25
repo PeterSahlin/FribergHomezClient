@@ -106,6 +106,7 @@ else
         </tbody>
     </table>
 }
+}
 
 
 @code {
@@ -183,11 +184,12 @@ else
     private async Task ResetSearch()
     {
         await OnInitializedAsync();
-
-    private void NavigateToAddSaleObjectPage()
-    {
-        navMan.NavigateTo("/AddSaleObject");
-
     }
-}
+        
+    private void NavigateToAddSaleObjectPage()
+        {
+            navMan.NavigateTo("/AddSaleObject");
+
+        }
+    }
 
