@@ -17,12 +17,12 @@
         <p>@saleObject.OperatingCostPerYear</p>
         <p>@saleObject.StartingPrice</p>
         <p>@saleObject.AncillaryArea</p>
-        <p>@saleObject.Category.Name</p>
         <p>@saleObject.Description</p>
         <p>@saleObject.LivingArea</p>
         <p>@saleObject.MonthlyFee</p>
-        <p>@saleObject.Municipality.Name</p>
-        <p>@saleObject.RealEstateAgent.FullName</p>
+        <p>@saleObject.Category?.Name</p>
+        <p>@saleObject.Municipality?.Name</p>
+        <p>@saleObject.RealEstateAgent?.FullName</p>
     </div>
 }
 

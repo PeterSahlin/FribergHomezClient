@@ -108,7 +108,6 @@ else
         </tbody>
     </table>
 }
-}
 
 
 @code {
@@ -158,7 +157,7 @@ else
     {
         await OnInitializedAsync();
 
-        string search = searchItem;
+        string search = searchItem.ToLower();
 
         if (search == null)
         {
@@ -166,16 +165,9 @@ else
 
         }
         FilteredObjects = SaleObjects.Where(o =>
-            o.Address.Contains(search) ||
-            o.StartingPrice.ToString().Contains(search) ||
-            o.LivingArea.ToString().Contains(search) ||
-            o.AncillaryArea.ToString().Contains(search) ||
-            o.PlotArea.ToString().Contains(search) ||
-            o.Description.Contains(search) ||
-            o.NumberOfRooms.ToString().Contains(search) ||
-            o.MonthlyFee.ToString().Contains(search) ||
-            o.OperatingCostPerYear.ToString().Contains(search) ||
-            o.YearOfConstruction.ToString().Contains(search)
+            o.Address.ToLower().Contains(search) ||
+            o.Description.ToLower().Contains(search) ||
+            o.RealEstateAgent.FullName.ToLower().Contains(search)
             ).ToList();
         SaleObjects = FilteredObjects;
 
@@ -192,8 +184,6 @@ else
             navMan.NavigateTo("/AddSaleObject");
 
         }
-    }
-
     private void NavigateToSaleObjectDetails(int id)
     {
         navMan.NavigateTo($"/SaleObjectDetails/{id}");
