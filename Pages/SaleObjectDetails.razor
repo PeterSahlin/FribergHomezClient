@@ -1,0 +1,43 @@
+﻿@page "/SaleObjectDetails/{Id:int}"
+@using FribergHomezClient.Models
+@inject NavigationManager navMan
+@using System.Net.Http.Json
+@inject HttpClient httpClient
+@using System.Text.Json
+
+
+<h3>Detaljer: @Id</h3>
+@if(saleObject != null)
+{
+    <div>
+        <p>@saleObject.Address</p>
+        <p>@saleObject.NumberOfRooms</p>
+        <p>@saleObject.PlotArea</p>
+        <p>@saleObject.StartingPrice</p>
+        <p>@saleObject.OperatingCostPerYear</p>
+        <p>@saleObject.StartingPrice</p>
+        <p>@saleObject.AncillaryArea</p>
+        <p>@saleObject.Category.Name</p>
+        <p>@saleObject.Description</p>
+        <p>@saleObject.LivingArea</p>
+        <p>@saleObject.MonthlyFee</p>
+        <p>@saleObject.Municipality.Name</p>
+        <p>@saleObject.RealEstateAgent.FullName</p>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public SaleObject saleObject = new SaleObject();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var saleObjectResponse = await httpClient.GetAsync($"/api/SalesObject/{Id}");
+        if (saleObjectResponse.IsSuccessStatusCode)
+        {
+            saleObject = await saleObjectResponse.Content.ReadFromJsonAsync<SaleObject>();
+        }
+    }
+}

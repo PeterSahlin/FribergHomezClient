@@ -74,6 +74,7 @@ else
                 <th>Mäklare</th>
                 <th>Kategori</th>
                 <th>Kommun</th>
+                <th>Detaljer</th>
 
             </tr>
         </thead>
@@ -101,6 +102,7 @@ else
                     </td>
                     <td>@item.Category.Name</td>
                     <td>@item.Municipality.Name</td>
+                    <td><button @onclick="@(e => NavigateToSaleObjectDetails(item.Id))">Detaljer</button></td>
                 </tr>
             }
         </tbody>
@@ -112,7 +114,6 @@ else
 @code {
 
     private string searchItem;
-
 
     public List<SaleObject>? SaleObjects;
 
@@ -185,11 +186,19 @@ else
     {
         await OnInitializedAsync();
     }
-        
+
     private void NavigateToAddSaleObjectPage()
         {
             navMan.NavigateTo("/AddSaleObject");
 
         }
     }
+
+    private void NavigateToSaleObjectDetails(int id)
+    {
+        navMan.NavigateTo($"/SaleObjectDetails/{id}");
+    }
+}
+
+
 

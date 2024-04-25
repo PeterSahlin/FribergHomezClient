@@ -72,7 +72,7 @@ else
     //methods
     protected override async Task OnInitializedAsync()
     {
-        LoggedInAgent = 5;
+        LoggedInAgent = 2;
         var response = await httpClient.GetAsync("/api/salesobject");
         if (response == null)
         {
