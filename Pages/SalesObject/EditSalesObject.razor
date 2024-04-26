@@ -1,4 +1,4 @@
-﻿@page "/EditSaleObject/{Id:int}"
+﻿@page "/SalesObject/EditSalesObject/{Id:int}"
 @using FribergHomezClient.Models
 @inject NavigationManager navMan
 @using System.Net.Http.Json
@@ -146,10 +146,10 @@
         newSaleObject = saleObject;
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"/api/salesobject", newSaleObject);      //ta bort id här.
+            var response = await httpClient.PutAsJsonAsync($"/api/salesobject", newSaleObject); 
             if (response.IsSuccessStatusCode)
             {
-                navMan.NavigateTo("/SalesObjectComponent");
+                navMan.NavigateTo("/SaleObject/ListAllSalesObjects");
             }
             else
             {

@@ -1,4 +1,4 @@
-﻿@page "/AddSaleObject"
+﻿@page "/SalesObject/AddSalesObject"
 @using FribergHomezClient.Models
 @using System.Net.Http.Json
 @using System.Text.Json
@@ -157,7 +157,7 @@
             var response = await httpClient.PostAsJsonAsync("/api/salesobject", newSaleObject);
             if (response.IsSuccessStatusCode)
             {
-                navMan.NavigateTo("/SalesObjectComponent");
+                navMan.NavigateTo("/SaleObject/ListAllSalesObjects");
             }
             else
             {
