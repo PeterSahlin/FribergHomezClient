@@ -18,14 +18,11 @@
         public int? RealEstateAgentId { get; set; }
         public int MunicipalityId { get; set; }
         public List<string> ImageUrl { get; set; } = new List<string>();
+        public bool IsActive { get; set; } = true;  
 
 
         public RealEstateAgent? RealEstateAgent { get; set; }
         public Municipality? Municipality { get; set; }
         public Category? Category { get; set; }
-
-
-
-        
     }
 }
