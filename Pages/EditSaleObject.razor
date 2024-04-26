@@ -146,7 +146,7 @@
         newSaleObject = saleObject;
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"/api/salesobject/{newSaleObject.Id}", newSaleObject);      //ta bort id här.
+            var response = await httpClient.PutAsJsonAsync($"/api/salesobject", newSaleObject);      //ta bort id här.
             if (response.IsSuccessStatusCode)
             {
                 navMan.NavigateTo("/SalesObjectComponent");
