@@ -29,12 +29,15 @@ else
         <tbody>
             @foreach (var item in Firms)
             {
-                <tr>@item.Name</tr>
-                <tr>@item.Presentation</tr>
-                <tr>@item.ImageLocation</tr>
-            <td><button @onclick="@(e => NavigateToFirmDetails(item.Id))">Detaljer</button></td>
-            <td><button @onclick="@(e => NavigateToEditFirm(item.Id))">Redigera</button></td>
-            <td><button @onclick="@(e => NavigateToDeleteFirm(item.Id))">Ta bort</button></td>
+                @if (item.IsActive)
+                {
+                    <tr>@item.Name</tr>
+                    <tr>@item.Presentation</tr>
+                    <tr>@item.ImageLocation</tr>
+                <td><button @onclick="@(e => NavigateToFirmDetails(item.Id))">Detaljer</button></td>
+                <td><button @onclick="@(e => NavigateToEditFirm(item.Id))">Redigera</button></td>
+                <td><button @onclick="@(e => NavigateToDeleteFirm(item.Id))">Ta bort</button></td>
+                }
             }
         </tbody>
     </table>
