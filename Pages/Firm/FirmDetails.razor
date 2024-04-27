@@ -1,0 +1,31 @@
+﻿@page "/Firm/FirmDetails/{Id:int}"
+@using FribergHomezClient.Models
+@inject NavigationManager navMan
+@using System.Net.Http.Json
+@inject HttpClient httpClient
+@using System.Text.Json
+
+<h3>Detaljer @Id</h3>
+
+@if(firm != null)
+{
+    <div>
+        <p>@firm.Name</p>
+        <p>@firm.Presentation</p>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Firm firm = new Firm();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync($"/api/Firm/{Id}");
+        if (response.IsSuccessStatusCode)
+        {
+            firm = await response.Content.ReadFromJsonAsync<Firm>();
+        }
+    }
+}

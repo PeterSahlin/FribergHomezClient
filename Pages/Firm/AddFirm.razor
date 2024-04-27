@@ -1,5 +1,56 @@
-﻿<h3>AddFirm</h3>
+﻿@page "/Firm/AddFirm"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+
+<h3>Lägg till ny firma</h3>
+
+<div>
+    <label for="nameInput">Namn:</label>
+    <input type="text" id="nameInput" @bind="newName" />
+</div>
+<div>
+    <label for="presentationInput">Presentation:</label>
+    <input type="text" id="presentationInput" @bind="newPresentation" />
+</div>
+<div>
+    <label for="imageLocationInput">Imgage location:</label>
+    <input type="text" id="imageLocationInput" @bind="newImageLocation" />
+</div>
+
+<button @onclick="AddNewFirm">Save</button>
 
 @code {
+    private string newName;
+    private string newPresentation;
+    private string newImageLocation;
+    private Firm NewFirm;
 
+    private async Task AddNewFirm()
+    {
+        NewFirm = new Firm()
+        {
+            Name = newName,
+            Presentation = newPresentation,
+            ImageLocation = newImageLocation
+        };
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync("/api/firm", NewFirm);
+            if (response.IsSuccessStatusCode)
+            {
+                navMan.NavigateTo("/Firm/ListAllFirms");
+            }
+            else
+            {
+                Console.WriteLine("Kunde inte lägga till firma");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
 }
