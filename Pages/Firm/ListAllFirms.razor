@@ -1,0 +1,72 @@
+﻿@page "/Firm/ListAllFirms"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+
+
+<h3>Alla Mäklarfirmor</h3>
+
+<div>
+    <button @onclick="NavigateToAddNewFirmPage">Lägg till ny firma</button>
+</div>
+
+@if (Firms == null)
+{
+    <p> Couldn't load firms.</p>
+}
+
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Namn</th>
+                <th>Presentation</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Firms)
+            {
+                <tr>@item.Name</tr>
+                <tr>@item.Presentation</tr>
+                <tr>@item.ImageLocation</tr>
+            <td><button @onclick="@(e => NavigateToFirmDetails(item.Id))">Detaljer</button></td>
+            <td><button @onclick="@(e => NavigateToEditFirm(item.Id))">Redigera</button></td>
+            <td><button @onclick="@(e => NavigateToDeleteFirm(item.Id))">Ta bort</button></td>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public List<Firm>? Firms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync("/api/firm");
+        if (response.IsSuccessStatusCode)
+        {
+            Firms = await response.Content.ReadFromJsonAsync<List<Firm>>();
+        }
+    }
+    private async Task NavigateToAddNewFirmPage()
+    {
+        navMan.NavigateTo("/Firm/AddFirm");
+    }
+    private void NavigateToFirmDetails(int id)
+    {
+        navMan.NavigateTo($"/Firm/FirmDetails/{id}");
+    }
+    private void NavigateToEditFirm(int id)
+    {
+        navMan.NavigateTo($"/Firm/EditFirm/{id}");
+    }
+
+    private async Task NavigateToDeleteFirm(int id)
+    {
+        await httpClient.DeleteAsync($"/api/Firm/{id}");
+        await OnInitializedAsync();
+    }
+}
