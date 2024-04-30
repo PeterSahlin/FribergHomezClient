@@ -54,6 +54,12 @@
 <div>
     <input type="text" @bind="addNewImgUrl" />
     <button @onclick="AddImgUrl">Lägg till bild</button>
+    @if (showPopup)
+    {
+        <div class="popup">
+            <span class="popuptext">Bild tillagd!</span>
+        </div>
+    }
 </div>
 <div>
     <label for="categoryDropdown">Kategori:</label>
@@ -108,6 +114,7 @@
     private int newRealEstateId = 0;
     public List<string> newImgUrl = new List<string>();
     private string addNewImgUrl;
+    private bool showPopup = false;
 
     public List<Category>? Categories = new List<Category>();
     public List<Municipality>? Municipalities = new List<Municipality>();
@@ -169,12 +176,34 @@
             Console.WriteLine(ex);
         }
     }
-    private void AddImgUrl()
+    private async void AddImgUrl()
     {
         if (!string.IsNullOrEmpty(addNewImgUrl))
         {
             newImgUrl.Add(addNewImgUrl);
             addNewImgUrl = string.Empty;
+            showPopup = true;
+            await Task.Delay(1000);
+            showPopup = false;
+            StateHasChanged();
         }
     }
 }
+
+<style>
+    .popup {
+        position: fixed;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        z-index: 9999;
+    }
+
+        .popup .popuptext {
+            color: #333;
+        }
+</style>
