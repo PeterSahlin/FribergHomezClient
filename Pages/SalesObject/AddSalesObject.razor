@@ -157,7 +157,7 @@
             var response = await httpClient.PostAsJsonAsync("/api/salesobject", newSaleObject);
             if (response.IsSuccessStatusCode)
             {
-                navMan.NavigateTo("/SaleObject/ListAllSalesObjects");
+                navMan.NavigateTo("/SalesObject/ListAllSalesObjects");
             }
             else
             {
