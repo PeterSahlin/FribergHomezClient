@@ -1,0 +1,114 @@
+﻿@page "/Municipality/ListAllMunicipalities"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+
+<img class="saleObjectImage" src="images/FribergHomezLogo.jpeg" />
+
+<PageTitle>Kommuner</PageTitle>
+
+<h1>Kommuner</h1>
+
+<div>
+    <button @onclick="NavigateToAddMunicipality">Lägg till kommun</button>
+</div>
+<input class="form-control" style="max-width:600px" placeholder="Sök..."
+       @bind="searchItem" />
+
+<button @onclick=SearchAsync>
+    Sök
+</button>
+<button @onclick=ResetSearch>
+    Rensa
+</button>
+
+
+@if (Municipalities == null)
+{
+    <p> Couldn't load municipalities.</p>
+}
+
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Kommun</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in FilteredMunicipalities)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td><button @onclick="@(e => NavigateToEditMunicipality(item.Id))">Redigera</button></td>
+                    <td><button @onclick="@(e => NavigateToDeleteMunicipality(item.Id))">Ta bort</button></td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+    @code {
+
+    private string searchItem;
+
+    public List<Municipality> Municipalities = new List<Municipality>();
+    public List<Municipality> FilteredMunicipalities = new List<Municipality>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync("/api/municipalities");
+        if (response.IsSuccessStatusCode)
+        {
+            Municipalities = await response.Content.ReadFromJsonAsync<List<Municipality>>();
+            FilteredMunicipalities = Municipalities;
+        }
+
+    }
+
+    public async Task SearchAsync()
+    {
+        await OnInitializedAsync();
+
+        string search = searchItem.ToLower();
+
+        if (search == null)
+        {
+            FilteredMunicipalities = Municipalities;
+
+        }
+        FilteredMunicipalities = Municipalities.Where(m =>
+            m.Name.ToLower().Contains(search)
+            ).ToList();
+        Municipalities = FilteredMunicipalities;
+
+    }
+
+
+    private async Task ResetSearch()
+    {
+        await OnInitializedAsync();
+    }
+    private void NavigateToAddMunicipality()
+    {
+        navMan.NavigateTo("/Municipality/AddMunicipality");
+
+    }
+    private void NavigateToMunicipalityDetails(int id)
+    {
+        navMan.NavigateTo($"/Municipality/MunicipalityDetails/{id}");
+    }
+    private void NavigateToEditMunicipality(int id)
+    {
+        navMan.NavigateTo($"/Municipality/EditMunicipality/{id}");
+    }
+
+    private async Task NavigateToDeleteMunicipality(int id)
+    {
+        await httpClient.DeleteAsync($"/api/municipalities/{id}");
+        await OnInitializedAsync();
+    }
+}
+}

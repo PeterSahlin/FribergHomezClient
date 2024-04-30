@@ -1,5 +1,47 @@
-﻿<h3>AddMunicipality</h3>
+﻿@page "/Municipality/AddMunicipality"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+
+
+
+<h3>Lägg till en kommun</h3>
+
+<div>
+    <label for="municipalityInput">Kommun:</label>
+    <input type="text" id="municipalityInput" @bind="newMunicipality" />
+</div>
+
+<button @onclick="AddNewMunicipality">Lägg till</button>
 
 @code {
+    private string newMunicipality = "";
 
+    private async Task AddNewMunicipality()
+    {
+        var municipality = new Municipality
+            {
+                Name = newMunicipality
+            };
+
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync("/api/municipalities", municipality);
+            if (response.IsSuccessStatusCode)
+            {
+                navMan.NavigateTo("/Municipality/ListAllMunicipalities");
+        
+            }
+            else
+            {
+                Console.WriteLine("Kunde inte lägga till kommun");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
 }
