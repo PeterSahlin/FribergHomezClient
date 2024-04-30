@@ -1,0 +1,81 @@
+﻿@page "/RealEstateAgent/RealEstateAgentDetails/{Id:int}"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+
+@*Peter*@
+
+<h3>Detaljer för @CurrentRealEstateAgent.FullName</h3>
+
+@if (CurrentRealEstateAgent != null)
+{
+    <div>
+        <img src="@CurrentRealEstateAgent.ImageUrl" width="100px" />
+        <p>Förnamn: </p>
+        <p>@CurrentRealEstateAgent.FirstName</p>
+        <p>Efternamn: </p>
+        <p>@CurrentRealEstateAgent.LastName</p>
+        <p>E-post: </p>
+        <p>@CurrentRealEstateAgent.Email</p>
+        <p>Telefonnummer: </p>
+        <p>@CurrentRealEstateAgent.PhoneNumber</p>
+        <p>Mäklarfirma: </p>
+        <p>@CurrentRealEstateAgent.Firm?.Name</p>
+        <p>Status: </p>
+        @if (CurrentRealEstateAgent.IsActive == true)
+        {
+            <p>Aktiv</p>
+        }
+        else
+        {
+            <p>Inaktiv</p>
+        }
+    </div>
+
+    <button @onclick="BackButton">Tillbaka</button>
+}
+
+
+
+
+
+
+
+
+
+@code {
+    /* TO DO
+
+    *Button to go back to agentlist
+    */
+
+
+
+
+    //PROPERTIES
+    [Parameter]
+    public int Id { get; set; }
+    public RealEstateAgent CurrentRealEstateAgent { get; set; } = new RealEstateAgent();
+
+
+    //METHODS
+    protected override async Task OnInitializedAsync()
+    {
+        var agentResponse = await httpClient.GetAsync($"api/RealEstateAgent/{Id}");
+        if (agentResponse.IsSuccessStatusCode)
+        {
+            CurrentRealEstateAgent = await agentResponse.Content.ReadFromJsonAsync<RealEstateAgent>();
+        }
+
+    }
+
+    public async Task BackButton()
+    {
+        navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
+    }
+
+
+
+}

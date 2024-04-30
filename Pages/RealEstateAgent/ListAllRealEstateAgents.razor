@@ -1,0 +1,213 @@
+﻿@page "/RealEstateAgent/ListAllRealEstateAgents"
+@using FribergHomezClient.Components
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject IJSRuntime JSRuntime
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+
+<script>
+    window.confirmDelete = function () {
+        return confirm('Är du säker på att du vill ta bort den valda mäklaren?');
+    }
+</script>
+
+<h1>Våra mäklare</h1>
+
+@if (AllAgentList == null)
+{
+    <p>Can't find Real estate agents.</p>
+}
+else
+{
+    @* add real estate agent button *@
+    <button @onclick="NavigateToAddRealEstateAgentPage">Lägg till mäklare</button>
+    <br />
+    <br />
+    <h3>Aktiva mäklare</h3>
+
+    @*active agent table*@
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+
+                <th>Förnamn</th>
+
+                <th>Efternamn</th>
+
+                <th>E-post</th>
+
+                <th>Telefonnummer</th>
+
+                <th>Mäklarfirma</th>
+
+                <th>Status</th>
+
+                <th>Redigera</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in ActiveAgentList)
+            {
+                <tr>
+                    <td><img src="@item.ImageUrl" width="100px" /></td>
+
+                    <td>@item.FirstName</td>
+
+                    <td>@item.LastName</td>
+
+                    <td>@item.Email</td>
+
+                    <td>@item.PhoneNumber</td>
+
+                    <td>@item.Firm.Name</td>
+
+                    @if (item.IsActive == true)
+                    {
+                        <td>Aktiv</td>
+                    }
+                    else
+                    {
+                        <td>Inaktiv</td>
+                    }
+                    <td>
+                        <button @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
+                        <button @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+                        <button @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    @*inactive agent table*@
+    <h3>Inaktiva mäklare</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+
+                <th>Förnamn</th>
+
+                <th>Efternamn</th>
+
+                <th>E-post</th>
+
+                <th>Telefonnummer</th>
+
+                <th>Mäklarfirma</th>
+
+                <th>Status</th>
+
+                <th>Redigera</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in InactiveAgentList)
+            {
+                <tr>
+                    <td><img src="@item.ImageUrl" style="border-radius: 50%" width="100px" /></td>
+
+                    <td>@item.FirstName</td>
+
+                    <td>@item.LastName</td>
+
+                    <td>@item.Email</td>
+
+                    <td>@item.PhoneNumber</td>
+
+                    <td>@item.Firm.Name</td>
+
+                    @if (item.IsActive == true)
+                    {
+                        <td>Aktiv</td>
+                    }
+                    else
+                    {
+                        <td>Inaktiv</td>
+                    }
+                    <td>
+                        <button @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
+                        <button @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+                        <button @onclick="@(e => NavigateToDeleteInactiveRealEstateAgent(item.Id))">Ta bort</button>
+
+                    
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+
+    //PROPERTIES
+    public List<RealEstateAgent> AllAgentList = new List<RealEstateAgent>();
+    public List<RealEstateAgent> ActiveAgentList = new List<RealEstateAgent>();
+    public List<RealEstateAgent> InactiveAgentList = new List<RealEstateAgent>();
+    private int selectedAgentId;
+
+
+
+    //METHODS
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync("api/RealEstateAgent");
+        if (response.IsSuccessStatusCode)
+        {
+            AllAgentList = await response.Content.ReadFromJsonAsync<List<RealEstateAgent>>();
+        }
+
+        ActiveAgentList = AllAgentList.Where(r => r.IsActive == true).ToList();
+        InactiveAgentList = AllAgentList.Where(r => r.IsActive == false).ToList();
+    }
+
+    //add agent
+    private void NavigateToAddRealEstateAgentPage()
+    {
+        navMan.NavigateTo("/RealEstateAgent/AddRealEstateAgent");
+
+    }
+
+    //agent details
+    private void NavigateToRealEstateAgentDetails(int id)
+    {
+        navMan.NavigateTo($"/RealEstateAgent/RealEstateAgentDetails/{id}");
+    }
+
+    //edit agent
+    private void NavigateToEditRealEstateAgent(int id)
+    {
+        navMan.NavigateTo($"/RealEstateAgent/EditRealEstateAgent/{id}");
+    }
+
+
+    //delete agent by setting inactive
+    public async Task SetAgentInactive(int id)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirmDelete"))
+        {
+            await httpClient.DeleteAsync($"/api/RealEstateAgent/{id}");
+            await OnInitializedAsync();
+        }
+    }
+
+
+    //delete inactive agent permanently
+    private async Task NavigateToDeleteInactiveRealEstateAgent(int id)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirmDelete"))
+        {
+            await httpClient.DeleteAsync($"/api/RealEstateAgent/Delete/{id}");
+            await OnInitializedAsync();
+        }
+    }
+}
