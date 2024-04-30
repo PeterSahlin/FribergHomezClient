@@ -82,7 +82,7 @@ else
     //methods
     protected override async Task OnInitializedAsync()
     {
-        LoggedInAgent = 2;
+        LoggedInAgent = 2;                                                                                  //Sätt till inloggad user efter identity
         var response = await httpClient.GetAsync("/api/salesobject");
         if (response == null)
         {

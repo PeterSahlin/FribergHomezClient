@@ -19,5 +19,9 @@
         public string PhoneNumber { get; set; }
         public string ImageUrl { get; set; }
         public int? FirmId { get; set; }
+        public bool IsActive { get; set; } = true;
+
+        //Navigation Properties
+        public Firm Firm { get; set; }
     }
 }
