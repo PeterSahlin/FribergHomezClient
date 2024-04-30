@@ -1,0 +1,60 @@
+﻿@page "/Category/EditCategory/{Id:int}"
+@using FribergHomezClient.Models
+@inject NavigationManager navMan
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+
+@*Henrik*@
+<h3>Redigera Kategori</h3>
+
+   @if (category != null)
+   {
+    <form @onsubmit="UpdateCategory">
+        <div>
+            <label for="Name">Namn:</label>
+            <input type="text" id="Name" @bind="category.Name" required />
+        </div>
+        <div>
+            <button type="submit">Spara</button>
+        </div>
+    </form>
+   }
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Category category = new Category();
+    public Category newCategory;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var categoryResponse = await httpClient.GetAsync($"/api/Category/{Id}");
+        if (categoryResponse.IsSuccessStatusCode)
+        {
+            category = await categoryResponse.Content.ReadFromJsonAsync<Category>();
+        }
+    }
+
+    private async Task UpdateCategory()
+    {
+        newCategory = category;
+        try
+        {
+            var response = await httpClient.PutAsJsonAsync($"/api/Category/{newCategory.Id}", newCategory);
+            if (response.IsSuccessStatusCode)
+            {
+                navMan.NavigateTo("/Category/ListAllCategories");
+            }
+            else
+            {
+                Console.WriteLine("Kunde inte uppdatera kategori");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+}

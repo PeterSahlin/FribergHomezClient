@@ -1,0 +1,59 @@
+﻿@page "/Firm/FirmDetails/{Id:int}"
+@using FribergHomezClient.Models
+@inject NavigationManager navMan
+@using System.Net.Http.Json
+@inject HttpClient httpClient
+@using System.Text.Json
+@using System.Linq
+
+@*Henrik*@
+<h3>Detaljer @Id</h3>
+
+@if(firm != null)
+{
+    <div>
+        <p>@firm.Name</p>
+        <p>@firm.Presentation</p>
+        @if(agents != null && agents.Any())
+        {
+            @foreach(var agent in agents)
+            {
+                <div>
+                    <img src="@agent.ImageUrl" style="width: 200px; heigth: 200px;"/>
+                    <p>Namn: @agent.FullName</p>
+                    <p>Email: @agent.Email</p>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Hittade inga mäklare för denna firma...</p>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public Firm firm = new Firm();
+    public List<RealEstateAgent> agents = new List<RealEstateAgent>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var firmResponse = await httpClient.GetAsync($"/api/Firm/{Id}");
+        if (firmResponse.IsSuccessStatusCode)
+        {
+            firm = await firmResponse.Content.ReadFromJsonAsync<Firm>();
+        }
+        var agentResponse = await httpClient.GetAsync($"/api/RealestateAgent");
+        if (agentResponse.IsSuccessStatusCode)
+        {
+            var allAgents = await agentResponse.Content.ReadFromJsonAsync<List<RealEstateAgent>>();
+            if(allAgents != null)
+            {
+                agents = allAgents.Where(agent => agent.FirmId == Id).ToList();
+            }
+        }
+
+    }
+}

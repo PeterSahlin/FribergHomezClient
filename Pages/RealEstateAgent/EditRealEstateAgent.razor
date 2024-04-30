@@ -1,0 +1,153 @@
+﻿@page "/RealEstateAgent/EditRealEstateAgent/{Id:int}"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+
+@*Peter*@
+
+<h3>EditRealEstateAgent</h3>
+
+<form @onsubmit="@(e => {UpdateStatus(StatusValue); EditRealEstateAgentAsync();  })">
+    <div>
+        <label for="firstname">Förnamn:</label>
+        <input type="text" id="firstname" @bind="@CurrentRealEstateAgent.FirstName" />
+    </div>
+    <div>
+        <label for="lastname">Efternamn:</label>
+        <input type="text" id="lastname" @bind="@CurrentRealEstateAgent.LastName" />
+    </div>
+    <div>
+        <label for="email">E-post:</label>
+        <input type="text" id="email" @bind="@CurrentRealEstateAgent.Email" />
+    </div>
+    <div>
+        <label for="phonenumber">Telefonnummer:</label>
+        <input type="text" id="phonenumber" @bind="@CurrentRealEstateAgent.PhoneNumber" />
+    </div>
+    <div>
+        <label for="imageurl">Bildlänk:</label>
+        <input type="text" id="imageurl" @bind="@CurrentRealEstateAgent.ImageUrl" />
+    </div>
+    <div>
+        <label for="firmDropDown">Mäklarfirma:</label>
+        <select id="firmDropDown" @bind="@CurrentRealEstateAgent.FirmId">
+            <option>Välj mäklarfirma</option>
+            @foreach (var firm in FirmList)
+            {
+                <option value="@firm.Id">@firm.Name</option>
+            }
+        </select>
+    </div>
+    @*TEST*@
+    @* <div *@                                                                                                  @*Drop down menu*@
+    @* <label for="statusDropDown">Status:</label>
+    <select id="statusDropDown" @onchange="UpdateStatus">
+    <option value="0">Inaktiv</option>
+    <option value="1">Aktiv</option>
+    </select>
+    </div>*@
+    @if (CurrentRealEstateAgent.IsActive == false)
+    {
+          <div>
+            <input type="radio" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
+        <label for="inactiveRadio">Inaktiv</label>
+    </div>
+        <div>
+            <input type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
+            <label for="activeRadio">Aktiv</label>
+        </div>
+    }
+
+    @*//TEST*@
+    <button type="submit">Spara</button>
+    <button @onclick="BackButton">Tillbaka</button>
+</form>
+
+
+
+
+
+
+
+@code {
+    //PROPERTIES
+    [Parameter]
+    public int Id { get; set; }
+    public RealEstateAgent CurrentRealEstateAgent { get; set; } = new RealEstateAgent();
+    public RealEstateAgent UpdatedRealEstateAgent { get; set; } = new RealEstateAgent();
+    public List<Firm> FirmList { get; set; } = new List<Firm>();
+    public int statusDropDown { get; set; }
+    public int StatusValue { get; set; }
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var agentResponse = await httpClient.GetAsync($"api/RealEstateAgent/{Id}");
+        if (agentResponse.IsSuccessStatusCode)
+        {
+            CurrentRealEstateAgent = await agentResponse.Content.ReadFromJsonAsync<RealEstateAgent>();
+        }
+
+        var firmResponse = await httpClient.GetAsync("api/Firm");
+        if (firmResponse.IsSuccessStatusCode)
+        {
+            FirmList = await firmResponse.Content.ReadFromJsonAsync<List<Firm>>();
+        }
+    }
+
+
+    public async Task EditRealEstateAgentAsync()
+    {
+        UpdatedRealEstateAgent = CurrentRealEstateAgent;
+        try
+        {
+            var updateAgentResponse = await httpClient.PutAsJsonAsync("/api/RealEstateAgent/", UpdatedRealEstateAgent);
+            if (updateAgentResponse.IsSuccessStatusCode)
+            {
+                navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
+            }
+            else
+            {
+                Console.WriteLine("Kunde inte uppdatera mäklare.");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine(ex);
+        }
+    }
+
+    public void UpdateStatus(int value)
+    {
+        
+        if (value == 0)
+        {
+            CurrentRealEstateAgent.IsActive = false;
+        }
+        else if (value == 1)
+        {
+            CurrentRealEstateAgent.IsActive = true;
+        }
+        // var value = Convert.ToInt32(e.Value);
+        // switch (value)
+        // {
+        //     case 0:
+        //         CurrentRealEstateAgent.IsActive = false;
+        //         break;
+        //     case 1:
+        //         CurrentRealEstateAgent.IsActive = true;
+        //         break;
+        // }
+
+    }
+
+    public async Task BackButton()
+    {
+        navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
+    }
+}

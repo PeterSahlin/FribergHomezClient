@@ -1,5 +1,104 @@
-﻿<h3>AddRealEstateAgent</h3>
+﻿@page "/RealEstateAgent/AddRealEstateAgent"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+
+@*Peter*@
+
+<PageTitle>Lägg till mäklare</PageTitle>
+
+<h3>Lägg till mäklare</h3>
+
+<form @onsubmit="AddRealEstateAgentAsync">
+    <div>
+        <label for="firstname">Förnamn:</label>
+        <input type="text" id="firstname" @bind="NewRealEstateAgent.FirstName" />
+    </div>
+    <div>
+        <label for="lastname">Efternamn:</label>
+        <input type="text" id="lastname" @bind="NewRealEstateAgent.LastName" />
+    </div>
+    <div>
+        <label for="email">E-post:</label>
+        <input type="text" id="email" @bind="NewRealEstateAgent.Email" />
+    </div>
+    <div>
+        <label for="phonenumber">Telefonnummer:</label>
+        <input type="text" id="phonenumber" @bind="NewRealEstateAgent.PhoneNumber" />
+    </div>
+    <div>
+        <label for="imageurl">Bildlänk:</label>
+        <input type="text" id="imageurl" @bind="NewRealEstateAgent.ImageUrl" />
+    </div>
+    <div>
+        <label for="firmDropDown">Mäklarfirma:</label>
+        <select id="firmDropDown" @bind="NewRealEstateAgent.FirmId">
+            <option>Välj mäklarfirma</option>
+            @foreach (var firm in FirmList)
+            {
+                <option value="@firm.Id">@firm.Name</option>
+            }
+        </select>
+    </div>
+
+    @* <button @onclick="AddRealEstateAgentAsync">Spara</button> *@
+    <button type="submit">Spara</button>
+</form>
+
+
 
 @code {
+    public string newImgUrl { get; set; }
+    public List<Firm> FirmList { get; set; } = new List<Firm>();
+    public RealEstateAgent NewRealEstateAgent { get; set; } = new RealEstateAgent();
+    // public Firm NewAgentFirm { get; set; }
 
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync("api/Firm");
+
+        if (response.IsSuccessStatusCode)
+        {
+            FirmList = await response.Content.ReadFromJsonAsync<List<Firm>>();
+        }
+    }
+
+    public async Task AddRealEstateAgentAsync()
+    {
+        // var agentToAdd = new RealEstateAgent();
+
+        var agentToAdd = NewRealEstateAgent;
+        if (agentToAdd.FirmId != null)
+        {
+            var agentFirmResponse = await httpClient.GetAsync($"/api/Firm/{agentToAdd.FirmId}");
+            if (agentFirmResponse.IsSuccessStatusCode)
+            {
+                agentToAdd.Firm = await agentFirmResponse.Content.ReadFromJsonAsync<Firm>();
+
+            }
+        }
+
+        try
+        {
+            var addNewAgentResponse = await httpClient.PostAsJsonAsync("/api/RealEstateAgent", agentToAdd);
+            if (addNewAgentResponse.IsSuccessStatusCode)
+            {
+                navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+
+
+        }
+
+    }
 }

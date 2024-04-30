@@ -4,6 +4,13 @@
 @using System.Text.Json
 @inject HttpClient httpClient
 @inject NavigationManager navMan
+@inject IJSRuntime JSRuntime
+
+<script>
+    window.confirmDelete = function () {
+        return confirm ('Är du säker på att du vill ta bort detta objekt?')
+    }
+</script>
 
 
 <img class="saleObjectImage" src="images/FribergHomezLogo.jpeg" />
@@ -17,7 +24,7 @@
 
 
 <div>
-    <button @onclick="NavigateToAddSalesObjectPage">Add New Sale Object</button>
+    <button @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
 </div>
 
 @* <div>  <FribergHomezClient.Components.SearchBox Items="SaleObjects" OnSearch="UpdateFilteredSearchAsync"></FribergHomezClient.Components.SearchBox> </div> *@
@@ -203,8 +210,11 @@ else
 
     private async Task NavigateToDeleteSalesObject(int id)
     {
-        await httpClient.DeleteAsync($"/api/salesObject/{id}");
-        await OnInitializedAsync();
+        if (await JSRuntime.InvokeAsync<bool>("confirmDelete"))
+        {
+            await httpClient.DeleteAsync($"/api/salesObject/{id}");
+            await OnInitializedAsync();
+        }
     }
 }
 

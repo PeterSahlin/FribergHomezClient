@@ -1,0 +1,41 @@
+﻿@if (IsVisible)
+{
+    
+<div class="popup">
+    <div class="popup-conent">
+        <p>@Message</p>
+        <button @onclick="Confirm">Ja</button>
+        <button @onclick="Cancel">Avbryt</button>
+    </div>
+</div>
+}
+
+@code {
+    //PROPERTIES
+    [Parameter]
+    public string Message { get; set; } 
+
+    [Parameter]
+    public EventCallback<bool> OnConfirmed { get; set; }
+
+    public bool IsVisible { get; set; } = false;
+
+    //METHODS
+    private async Task Confirm()
+    {
+        IsVisible = false;
+        await OnConfirmed.InvokeAsync(true);
+    }
+
+    private async Task Cancel()
+    {
+        IsVisible =false;
+        await OnConfirmed.InvokeAsync(false);
+    }
+
+    public async Task Show()
+    {
+        IsVisible = true;
+    }
+
+}
