@@ -5,32 +5,37 @@
 @inject HttpClient httpClient
 @using System.Text.Json
 
-
-<h3>Detaljer: @Id</h3>
-@if(saleObject != null)
-{
-    <div>
-        <p>@saleObject.Address</p>
-        <p>@saleObject.NumberOfRooms</p>
-        <p>@saleObject.PlotArea</p>
-        <p>@saleObject.StartingPrice</p>
-        <p>@saleObject.OperatingCostPerYear</p>
-        <p>@saleObject.StartingPrice</p>
-        <p>@saleObject.AncillaryArea</p>
-        <p>@saleObject.Description</p>
-        <p>@saleObject.LivingArea</p>
-        <p>@saleObject.MonthlyFee</p>
-        <p>@saleObject.Category?.Name</p>
-        <p>@saleObject.Municipality?.Name</p>
-        <p>@saleObject.RealEstateAgent?.FullName</p>
-    </div>
-}
-
+<div class="container">
+    <h3 class="mt-3">Detaljer: @Id</h3>
+    @if (saleObject != null)
+    {
+        <div class="card mt-3">
+            <div class="card-body">
+                <p><strong>Adress:</strong> @saleObject.Address</p>
+                <p><strong>Antal rum:</strong> @saleObject.NumberOfRooms</p>
+                <p><strong>Tomtarea:</strong> @saleObject.PlotArea</p>
+                <p><strong>Utgångspris:</strong> @saleObject.StartingPrice</p>
+                <p><strong>Driftkostnad per år:</strong> @saleObject.OperatingCostPerYear</p>
+                <p><strong>Bostadsyta:</strong> @saleObject.LivingArea</p>
+                <p><strong>Biarea:</strong> @saleObject.AncillaryArea</p>
+                <p><strong>Beskrivning:</strong> @saleObject.Description</p>
+                <p><strong>Månadskostnad:</strong> @saleObject.MonthlyFee</p>
+                <p><strong>Kategori:</strong> @saleObject.Category?.Name</p>
+                <p><strong>Kommun:</strong> @saleObject.Municipality?.Name</p>
+                <p><strong>Mäklare:</strong> @saleObject.RealEstateAgent?.FullName</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p class="mt-3 text-danger">No sale object found with ID: @Id</p>
+    }
+</div>
 
 @code {
     [Parameter]
     public int Id { get; set; }
-    public SaleObject saleObject = new SaleObject();
+    public SaleObject saleObject;
 
     protected override async Task OnInitializedAsync()
     {
