@@ -8,151 +8,110 @@
 
 <script>
     window.confirmDelete = function () {
-        return confirm ('Är du säker på att du vill ta bort detta objekt?')
+        return confirm('Är du säker på att du vill ta bort detta objekt?');
     }
 </script>
 
+<div class="container">
+    <h1 class="display-4">Våra bostäder</h1>
 
-<img class="saleObjectImage" src="images/FribergHomezLogo.jpeg" />
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <button class="btn btn-primary" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
+        </div>
+        <div class="input-group" style="max-width: 400px;">
+            <input class="form-control" placeholder="Sök..." @bind="searchItem" />
+            <button class="btn btn-outline-secondary" type="button" @onclick="SearchAsync">Sök</button>
+            <button class="btn btn-outline-secondary" type="button" @onclick="ResetSearch">Rensa</button>
+        </div>
+        <div>
+            <label for="municipalityDropdown" class="me-2">Välj kommun:</label>
+            <select class="form-select" id="municipalityDropdown" @onchange="HandleMunicipalityChangeDropDown">
+                <option value="0">Alla kommuner</option>
+                @foreach (var municipality in Municipalities)
+                {
+                    <option value="@municipality.Id">@municipality.Name</option>
+                }
+            </select>
+        </div>
+    </div>
 
-
-
-<PageTitle>Våra bostäder</PageTitle>
-
-
-<h1>Våra bostäder</h1>
-
-
-<div>
-    <button @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
-</div>
-
-@* <div>  <FribergHomezClient.Components.SearchBox Items="SaleObjects" OnSearch="UpdateFilteredSearchAsync"></FribergHomezClient.Components.SearchBox> </div> *@
-
-
-
-
-@* <div>  <FribergHomezClient.Components.SearchBox Items="SaleObjects" OnSearch="UpdateFilteredSearchAsync"></FribergHomezClient.Components.SearchBox> </div> *@
-
-<input class="form-control" style="max-width:600px" placeholder="Sök..."
-       @bind="searchItem" />
-
-<button @onclick=SearchAsync>
-    Sök
-</button>
-<button @onclick=ResetSearch>
-    Rensa
-</button>
-
-
-<div>
-    <label for="municipalityDropdown">Välj kommun: </label>
-    <select id="municipalityDropdown" @onchange="HandleMunicipalityChangeDropDown">
-        <option value="0">Alla kommuner</option>
-        @foreach (var municipality in Municipalities)
-        {
-            <option value="@municipality.Id">@municipality.Name</option>
-        }
-    </select>
-</div>
-
-
-@if (SaleObjects == null)
-{
-    <p> Couldn't load sale objects.</p>
-}
-
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>Adress</th>
-                <th>Utgångspris</th>
-                <th>Boarea</th>
-                <th>Biarea</th>
-                <th>Tomtarea</th>
-                <th>Beskrivning</th>
-                <th>Antal rum</th>
-                <th>Månadskostnad</th>
-                <th>Årskostnad</th>
-                <th>Byggår</th>
-                <th>Bilder</th>
-                <th>Mäklare</th>
-                <th>Kategori</th>
-                <th>Kommun</th>
-                <th>Detaljer</th>
-
-            </tr>
-        </thead>
-        <tbody>
+    @if (SaleObjects == null)
+    {
+        <p class="alert alert-danger">Couldn't load sale objects.</p>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
             @foreach (var item in FilteredObjects)
             {
                 if (item.IsActive == true)
                 {
-                    
-                <tr>
-                    <td>@item.Address</td>
-                    <td>@item.StartingPrice</td>
-                    <td>@item.LivingArea</td>
-                    <td>@item.AncillaryArea</td>
-                    <td>@item.PlotArea</td>
-                    <td>@item.Description</td>
-                    <td>@item.NumberOfRooms</td>
-                    <td>@item.MonthlyFee</td>
-                    <td>@item.OperatingCostPerYear</td>
-                    <td>@item.YearOfConstruction</td>
-                    <td>@item.RealEstateAgent.FirstName @item.RealEstateAgent.LastName</td>
+                    <div class="col">
+                        <div class="card">
+                            <a href="/SalesObject/SalesObjectDetails/@item.Id">
+                            <div id="carouselExampleControls_@item.Id" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                    @foreach (var image in item.ImageUrl)
+                                    {
+                                        <div class="carousel-item @(image == item.ImageUrl.First() ? "active" : "")">
+                                            <img src="@image" class="d-block w-100" alt="..." />
+                                        </div>
+                                    }
+                                </div>
+@*                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button> *@
+                            </div>
 
-                    <td>
-                        @foreach (var image in item.ImageUrl)
-                        {
-                            <img class="saleObjectImage" src=@image />
-                        }
-                    </td>
-                    <td>@item.Category.Name</td>
-                    <td>@item.Municipality.Name</td>
-                    <td><button @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button></td>
-                    <td><button @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button></td>
-                    <td><button @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button></td>
-                </tr>
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Address</h5>
+                                <p class="card-text">Utgångspris: @item.StartingPrice.ToString("N0") kr</p>
+                                <p class="card-text">Rum: @item.NumberOfRooms</p>
+                                <p class="card-text">Boarea: @item.LivingArea m²</p>
+                                <!-- Add other details as needed -->
+                            </div>
+                            </a>
+                                <button class="btn btn-info" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))" style="width: 50%; align-self: center;">Detaljer</button>
+                                <button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button>
+                                <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button>
+                        </div>
+                    </div>
                 }
             }
-        </tbody>
-    </table>
-}
-
+        </div>
+    }
+</div>
 
 @code {
-
     private string searchItem;
 
     public SaleObject SaleObjectToDelete;
-
     public List<SaleObject>? SaleObjects;
-
     public List<SaleObject>? FilteredObjects;
-
     public List<Municipality> Municipalities = new List<Municipality>();
 
     protected override async Task OnInitializedAsync()
     {
-
         var response = await httpClient.GetAsync("/api/salesobject");
         if (response.IsSuccessStatusCode)
         {
             SaleObjects = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
-
             FilteredObjects = SaleObjects;
-
-
         }
+
         var municipalityResponse = await httpClient.GetAsync("/api/municipalities");
         if (municipalityResponse.IsSuccessStatusCode)
         {
             Municipalities = await municipalityResponse.Content.ReadFromJsonAsync<List<Municipality>>();
         }
     }
+
     private void HandleMunicipalityChangeDropDown(ChangeEventArgs e)
     {
         var selectedMunicipalityId = Convert.ToInt32(e.Value);
@@ -163,31 +122,24 @@ else
         else
         {
             FilteredObjects = SaleObjects.Where(s => s.MunicipalityId == selectedMunicipalityId).ToList();
-
         }
     }
 
-    //Peter
     public async Task SearchAsync()
     {
         await OnInitializedAsync();
-
         string search = searchItem.ToLower();
-
         if (search == null)
         {
             FilteredObjects = SaleObjects;
-
         }
         FilteredObjects = SaleObjects.Where(o =>
             o.Address.ToLower().Contains(search) ||
             o.Description.ToLower().Contains(search) ||
             o.RealEstateAgent.FullName.ToLower().Contains(search)
-            ).ToList();
+        ).ToList();
         SaleObjects = FilteredObjects;
-
     }
-
 
     private async Task ResetSearch()
     {
@@ -197,12 +149,13 @@ else
     private void NavigateToAddSalesObjectPage()
     {
         navMan.NavigateTo("/SalesObject/AddSalesObject");
-
     }
+
     private void NavigateToSalesObjectDetails(int id)
     {
         navMan.NavigateTo($"/SalesObject/SalesObjectDetails/{id}");
     }
+
     private void NavigateToEditSalesObject(int id)
     {
         navMan.NavigateTo($"/SalesObject/EditSalesObject/{id}");
@@ -217,6 +170,3 @@ else
         }
     }
 }
-
-
-
