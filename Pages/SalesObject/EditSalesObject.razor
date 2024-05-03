@@ -6,63 +6,42 @@
 @inject HttpClient httpClient
 
 <h3>Redigera försäljningsobjekt</h3>
-   @if (saleObject != null)
+@if (saleObject != null)
 {
     <form @onsubmit="UpdateSaleObject">
         <div>
-            <label for="Address">Adress:</label>
-            <input type="text" id="address" @bind="saleObject.Address" required />
+            <input type="text" id="address" class="form-control" placeholder="Adress" @bind="saleObject.Address" required />
         </div>
         <div>
-            <label for="startingPriceInput">Utgångspris:</label>
-            <input type="number" id="startingPriceInput" @bind="saleObject.StartingPrice" />
+            <input type="number" id="startingPriceInput" class="form-control" placeholder="Utgångspris" @bind="saleObject.StartingPrice" />
         </div>
         <div>
-            <label for="LivingAreaInput">Boarea:</label>
-            <input type="number" id="LivingAreaInput" @bind="saleObject.LivingArea" />
+            <input type="number" id="LivingAreaInput" class="form-control" placeholder="Boarea" @bind="saleObject.LivingArea" />
         </div>
         <div>
-            <label for="newAncillaryAreaInput">Biarea:</label>
-            <input type="number" id="newAncillaryAreaInput" @bind="saleObject.AncillaryArea" />
+            <input type="number" id="newAncillaryAreaInput" class="form-control" placeholder="Biarea" @bind="saleObject.AncillaryArea" />
         </div>
         <div>
-            <label for="newPlotAreaInput">Tomtarea:</label>
-            <input type="number" id="newPlotAreaInput" @bind="saleObject.PlotArea" />
+            <input type="number" id="newPlotAreaInput" class="form-control" placeholder="Tomtarea" @bind="saleObject.PlotArea" />
         </div>
         <div>
-            <label for="newDescriptionInput">Beskrivning:</label>
-            <input type="text" id="newDescriptionInput" @bind="saleObject.Description" />
+            <textarea id="newDescriptionInput" class="form-control" placeholder="Beskrivning" @bind="saleObject.Description" rows="3"></textarea>
         </div>
         <div>
-            <label for="newNumberOfRoomsInput">Antal rum:</label>
-            <input type="number" id="newNumberOfRoomsInput" @bind="saleObject.NumberOfRooms" />
+            <input type="number" id="newNumberOfRoomsInput" class="form-control" placeholder="Antal rum" @bind="saleObject.NumberOfRooms" />
         </div>
         <div>
-            <label for="newMonthlyFeeInput">Månadsavgift:</label>
-            <input type="number" id="newMonthlyFeeInput" @bind="saleObject.MonthlyFee" />
+            <input type="number" id="newMonthlyFeeInput" class="form-control" placeholder="Månadsavgift" @bind="saleObject.MonthlyFee" />
         </div>
         <div>
-            <label for="newOperatingCostPerYearInput">Årsavgift:</label>
-            <input type="number" id="newOperatingCostPerYearInput" @bind="saleObject.OperatingCostPerYear" />
+            <input type="number" id="newOperatingCostPerYearInput" class="form-control" placeholder="Årsavgift" @bind="saleObject.OperatingCostPerYear" />
         </div>
         <div>
-            <label for="newYearOfConstructionInput">Byggår:</label>
-            <input type="number" id="newYearOfConstructionInput" @bind="saleObject.YearOfConstruction" />
+            <input type="number" id="newYearOfConstructionInput" class="form-control" placeholder="Byggår" @bind="saleObject.YearOfConstruction" />
         </div>
         <div>
-            @foreach (var image in saleObject.ImageUrl)
-            {
-                <img class="saleObjectImage" src=@image />
-            }
-        </div>
-         <div>
-    <input type="text" @bind="addNewImgUrl" />
-            <button @onclick="AddImgUrl">Lägg till bild</button>
-        </div>
-        <div>
-            <label for="categoryDropdown">Kategori:</label>
-            <select id="categoryDropdown" @bind="saleObject.CategoryId">
-                <option value="">Select Category</option>
+            <select id="categoryDropdown" class="form-select" placeholder="Kategori" @bind="saleObject.CategoryId">
+                <option value="">Välj kategori</option>
                 @foreach (var category in Categories)
                 {
                     <option value="@category.Id">@category.Name</option>
@@ -71,8 +50,7 @@
         </div>
 
         <div>
-            <label for="municipalityDropdown">Kommun:</label>
-            <select id="municipalityDropdown" @bind="saleObject.MunicipalityId">
+            <select id="municipalityDropdown" class="form-select" placeholder="Kommun" @bind="saleObject.MunicipalityId">
                 <option value="">Välj kommun</option>
                 @foreach (var municipality in Municipalities)
                 {
@@ -82,8 +60,7 @@
         </div>
 
         <div>
-            <label for="realEstateAgentDropdown">Mäklare:</label>
-            <select id="realEstateAgentDropdown" @bind="saleObject.RealEstateAgentId">
+            <select id="realEstateAgentDropdown" class="form-select" placeholder="Mäklare" @bind="saleObject.RealEstateAgentId">
                 <option value="">Välj mäklare</option>
                 @foreach (var agent in RealEstateAgents)
                 {
@@ -91,11 +68,34 @@
                 }
             </select>
         </div>
+        <div class="row">
+            @foreach (var image in saleObject.ImageUrl)
+            {
+                <div class="col-md-3 mb-3">
+                    <div class="image-container">
+                        <img class="saleObjectImage img-fluid" src=@image />
+                        <button type="button" class="btn btn-danger btn-sm mt-2" @onclick="() => RemoveImgUrl(image)">Remove</button>
+                    </div>
+                </div>
+            }
+        </div>
         <div>
-            <button type="submit">Spara</button>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Bildurl" @bind="addNewImgUrl" />
+                <button type="button" class="btn btn-primary" @onclick="AddImgUrl">Lägg till bild</button>
+            </div>
+            @if (showPopup)
+            {
+                <div class="popup">
+                    <span class="popuptext">Bild tillagd!</span>
+                </div>
+            }
+        </div>
+        <div>
+            <button type="submit" class="btn btn-success">Spara</button>
+            <button type="button" class="btn btn-danger" @onclick="ReturnToListAll">Avbryt</button>
         </div>
     </form>
-  
 }
 @code {
 
@@ -104,10 +104,12 @@
     public SaleObject newSaleObject;
     [Parameter]
     public int Id { get; set; }
-    public string addNewImgUrl;
     public List<Category>? Categories = new List<Category>();
     public List<Municipality>? Municipalities = new List<Municipality>();
     public List<RealEstateAgent>? RealEstateAgents = new List<RealEstateAgent>();
+    public List<string> newImgUrl = new List<string>();
+    private string addNewImgUrl;
+    private bool showPopup = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -133,12 +135,16 @@
             RealEstateAgents = await agentResponse.Content.ReadFromJsonAsync<List<RealEstateAgent>>();
         }
     }
-    private void AddImgUrl()
+    private async void AddImgUrl()
     {
         if (!string.IsNullOrEmpty(addNewImgUrl))
         {
-            saleObject.ImageUrl.Add(addNewImgUrl);
+            newImgUrl.Add(addNewImgUrl);
             addNewImgUrl = string.Empty;
+            showPopup = true;
+            await Task.Delay(1000);
+            showPopup = false;
+            StateHasChanged();
         }
     }
     private async Task UpdateSaleObject()
@@ -161,4 +167,34 @@
             Console.WriteLine(ex);
         }
     }
+    private void RemoveImgUrl(string imageUrl)
+    {
+        saleObject.ImageUrl.Remove(imageUrl);
+    }
+    private void ReturnToListAll()
+    {
+        navMan.NavigateTo("/SalesObject/ListAllSalesObjects");
+    }
 }
+<style>
+    .saleObjectImage {
+        max-width: 100px;
+        height: auto;
+    }
+
+    .popup {
+        position: fixed;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        z-index: 9999;
+    }
+
+        .popup .popuptext {
+            color: #333;
+        }
+</style>

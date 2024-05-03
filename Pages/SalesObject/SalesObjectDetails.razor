@@ -6,23 +6,48 @@
 @using System.Text.Json
 
 <div class="container">
-    <h3 class="mt-3">Detaljer: @Id</h3>
+    <h3 class="mt-3">@saleObject.Address</h3>
     @if (saleObject != null)
     {
-        <div class="card mt-3">
-            <div class="card-body">
-                <p><strong>Adress:</strong> @saleObject.Address</p>
-                <p><strong>Antal rum:</strong> @saleObject.NumberOfRooms</p>
-                <p><strong>Tomtarea:</strong> @saleObject.PlotArea</p>
-                <p><strong>Utgångspris:</strong> @saleObject.StartingPrice</p>
-                <p><strong>Driftkostnad per år:</strong> @saleObject.OperatingCostPerYear</p>
-                <p><strong>Bostadsyta:</strong> @saleObject.LivingArea</p>
-                <p><strong>Biarea:</strong> @saleObject.AncillaryArea</p>
-                <p><strong>Beskrivning:</strong> @saleObject.Description</p>
-                <p><strong>Månadskostnad:</strong> @saleObject.MonthlyFee</p>
-                <p><strong>Kategori:</strong> @saleObject.Category?.Name</p>
-                <p><strong>Kommun:</strong> @saleObject.Municipality?.Name</p>
-                <p><strong>Mäklare:</strong> @saleObject.RealEstateAgent?.FullName</p>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div id="carouselExampleControls_@saleObject.Id" class="carousel slide mb-3" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @foreach (var image in saleObject.ImageUrl)
+                        {
+                            <div class="carousel-item @(image == saleObject.ImageUrl.First() ? "active" : "")">
+                                <img src="@image" class="d-block w-100" alt="..." style="border-radius: 10px; margin-top: 15px;"/>
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@saleObject.Id" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@saleObject.Id" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <button class="btn btn-primary" @onclick="ReturnToPreviousPage">Tillbaka till alla</button>
+            </div>
+            <div class="col-md-6">
+                <div class="card mt-3">
+                    <div class="card-body">
+@*                         <p class="card-text"><strong>Adress:</strong> @saleObject.Address</p> *@
+                        <p><strong>Kommun:</strong> @saleObject.Municipality?.Name</p>
+                        <p><strong>Kategori:</strong> @saleObject.Category?.Name</p>
+                        <p><strong>Utgångspris:</strong> @saleObject.StartingPrice.ToString("N0") kr</p>
+                        <p><strong>Månadskostnad:</strong> @saleObject.MonthlyFee.ToString("N0") kr</p>
+                        <p><strong>Antal rum:</strong> @saleObject.NumberOfRooms</p>
+                        <p><strong>Tomtarea:</strong> @saleObject.PlotArea m²</p>
+                        <p><strong>Bostadsyta:</strong> @saleObject.LivingArea m²</p>
+                        <p><strong>Biarea:</strong> @saleObject.AncillaryArea m²</p>
+                        <p><strong>Driftkostnad per år:</strong> @saleObject.OperatingCostPerYear.ToString("N0") kr</p>
+                        <p><strong>Beskrivning:</strong> @saleObject.Description</p>
+                        <p><strong>Mäklare:</strong> @saleObject.RealEstateAgent?.FullName <img src="@saleObject.RealEstateAgent?.ImageUrl" style="max-width: 300px; height: 200px; margin-left: 30px; border-radius: 10px;"/></p>
+                    </div>
+                </div>
             </div>
         </div>
     }
@@ -44,5 +69,9 @@
         {
             saleObject = await saleObjectResponse.Content.ReadFromJsonAsync<SaleObject>();
         }
+    }
+    private void ReturnToPreviousPage()
+    {
+        navMan.NavigateTo("/SalesObject/ListAllSalesObjects");
     }
 }
