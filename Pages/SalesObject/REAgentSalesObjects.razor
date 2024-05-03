@@ -4,73 +4,59 @@
 @using System.Text.Json
 @inject HttpClient httpClient
 
-<h3>Mina försäljningsobjekt</h3>
+<h3 class="mb-4">Mina försäljningsobjekt</h3>
 @if (MySalesObjectList != null)
 {
-    <p>Inloggad mäklare: @MySalesObjectList.FirstOrDefault(r => r.RealEstateAgentId == LoggedInAgent).RealEstateAgent.FullName</p>
+    <p class="mb-4">Inloggad mäklare: @MySalesObjectList.FirstOrDefault(r => r.RealEstateAgentId == LoggedInAgent).RealEstateAgent.FullName</p>
 }
 else
 {
-    <p> Couldn't load sale objects.</p>
+    <p class="text-danger mb-4">Kunde inte ladda försäljningsobjekt.</p>
 }
 
 @if (MySalesObjectList == null)
 {
-    <p> Couldn't load sale objects.</p>
+    <p class="text-danger mb-4">Kunde inte ladda försäljningsobjekt.</p>
 }
-
 else
 {
-    @* <div class="SaleObject">
-
-        <div>
-
-
-        </div>
-
-    </div> *@
-
-
-
-
-    <table>
-        <thead>
-            <tr>
-                <th>Status</th>
-                <th>Adress</th>
-                <th>Beskrivning</th>
-                <th>Utgångspris</th>
-                <th>Kategori</th>
-                <th>Kommun</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in MySalesObjectList)
-            {
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>@if (item.IsActive == false)
-                        {
-                            <p>Inaktiv</p>
-                        }
-                        else
-                        {
-                            <p>Aktiv</p>
-                        }
-                    </td>
-                    <td>@item.Address</td>
-                    <td>@item.Description</td>
-                    <td>@item.StartingPrice</td>
-                    <td>@item.Category.Name</td>
-                    <td>@item.Municipality.Name</td>
+                    <th>Status</th>
+                    <th>Adress</th>
+                    <th>Beskrivning</th>
+                    <th>Utgångspris</th>
+                    <th>Kategori</th>
+                    <th>Kommun</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in MySalesObjectList)
+                {
+                    <tr>
+                        <td>
+                            @if (item.IsActive == false)
+                            {
+                                <span class="badge bg-danger">Inaktiv</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Aktiv</span>
+                            }
+                        </td>
+                        <td>@item.Address</td>
+                        <td>@item.Description</td>
+                        <td>@item.StartingPrice.ToString("N0") kr</td>
+                        <td>@item.Category.Name</td>
+                        <td>@item.Municipality.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
-
-
-
 
 @code
 {
@@ -82,7 +68,7 @@ else
     //methods
     protected override async Task OnInitializedAsync()
     {
-        LoggedInAgent = 1;                                                                                  //Sätt till inloggad user efter identity
+        LoggedInAgent = 1; //Sätt till inloggad user efter identity
         var response = await httpClient.GetAsync("/api/salesobject");
         if (response == null)
         {
@@ -92,20 +78,17 @@ else
         {
             AllSalesObjectList = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
             MySalesObjectList = AllSalesObjectList.Where(o => o.RealEstateAgentId == LoggedInAgent).ToList();
-
         }
-
-
     }
 
-     /*
-     * variabel för att ta emot respons från API
-     *variabel för att lagra vilken mäklare som är inloggad.
-     * Lista av saleobjects som har realestateagentid == inloggadmäklare
-     * Visa saleobjects med inloggadmäklares id.
-     *
-     *
-     *
-         *
+    /*
+    * variabel för att ta emot respons från API
+    *variabel för att lagra vilken mäklare som är inloggad.
+    * Lista av saleobjects som har realestateagentid == inloggadmäklare
+    * Visa saleobjects med inloggadmäklares id.
+    *
+    *
+    *
+    *
     * */
 }
