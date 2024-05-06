@@ -9,61 +9,64 @@
 
 <h3>Redigera @CurrentRealEstateAgent.FullName</h3>
 
-<form @onsubmit="@(e => {UpdateStatus(StatusValue); EditRealEstateAgentAsync();  })">
-    <div>
-        <label for="firstname">Förnamn:</label>
-        <input type="text" id="firstname" @bind="@CurrentRealEstateAgent.FirstName" />
-    </div>
-    <div>
-        <label for="lastname">Efternamn:</label>
-        <input type="text" id="lastname" @bind="@CurrentRealEstateAgent.LastName" />
-    </div>
-    <div>
-        <label for="email">E-post:</label>
-        <input type="text" id="email" @bind="@CurrentRealEstateAgent.Email" />
-    </div>
-    <div>
-        <label for="phonenumber">Telefonnummer:</label>
-        <input type="text" id="phonenumber" @bind="@CurrentRealEstateAgent.PhoneNumber" />
-    </div>
-    <div>
-        <label for="imageurl">Bildlänk:</label>
-        <input type="text" id="imageurl" @bind="@CurrentRealEstateAgent.ImageUrl" />
-    </div>
-    <div>
-        <label for="firmDropDown">Mäklarfirma:</label>
-        <select id="firmDropDown" @bind="@CurrentRealEstateAgent.FirmId">
-            <option>Välj mäklarfirma</option>
-            @foreach (var firm in FirmList)
-            {
-                <option value="@firm.Id">@firm.Name</option>
-            }
-        </select>
-    </div>
-    @*TEST*@
-    @* <div *@                                                                                                  @*Drop down menu*@
-    @* <label for="statusDropDown">Status:</label>
-    <select id="statusDropDown" @onchange="UpdateStatus">
-    <option value="0">Inaktiv</option>
-    <option value="1">Aktiv</option>
-    </select>
-    </div>*@
-    @if (CurrentRealEstateAgent.IsActive == false)
-    {
-          <div>
-            <input type="radio" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
-        <label for="inactiveRadio">Inaktiv</label>
-    </div>
+    <img src="@CurrentRealEstateAgent.ImageUrl" class="card-img" alt="@CurrentRealEstateAgent.FullName" style="width:320px;" />
+<div class="card" style="height:320px; ">
+    <form @onsubmit="@(e => {UpdateStatus(StatusValue); EditRealEstateAgentAsync();  })">
         <div>
-            <input type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
-            <label for="activeRadio">Aktiv</label>
+            <label for="firstname">Förnamn:</label>
+            <input type="text" id="firstname" @bind="@CurrentRealEstateAgent.FirstName" />
         </div>
-    }
+        <div>
+            <label for="lastname">Efternamn:</label>
+            <input type="text" id="lastname" @bind="@CurrentRealEstateAgent.LastName" />
+        </div>
+        <div>
+            <label for="email">E-post:</label>
+            <input type="text" id="email" @bind="@CurrentRealEstateAgent.Email" />
+        </div>
+        <div>
+            <label for="phonenumber">Telefonnummer:</label>
+            <input type="text" id="phonenumber" @bind="@CurrentRealEstateAgent.PhoneNumber" />
+        </div>
+        <div>
+            <label for="imageurl">Bildlänk:</label>
+            <input type="text" id="imageurl" @bind="@CurrentRealEstateAgent.ImageUrl" />
+        </div>
+        <div>
+            <label for="firmDropDown">Mäklarfirma:</label>
+            <select id="firmDropDown" @bind="@CurrentRealEstateAgent.FirmId">
+                <option>Välj mäklarfirma</option>
+                @foreach (var firm in FirmList)
+                {
+                    <option value="@firm.Id">@firm.Name</option>
+                }
+            </select>
+        </div>
+        @*TEST*@
+        @* <div *@                                                                                                  @*Drop down menu*@
+        @* <label for="statusDropDown">Status:</label>
+        <select id="statusDropDown" @onchange="UpdateStatus">
+        <option value="0">Inaktiv</option>
+        <option value="1">Aktiv</option>
+        </select>
+        </div>*@
+        @if (CurrentRealEstateAgent.IsActive == false)
+        {
+            <div>
+                <input type="radio" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
+                <label for="inactiveRadio">Inaktiv</label>
+            </div>
+            <div>
+                <input type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
+                <label for="activeRadio">Aktiv</label>
+            </div>
+        }
 
-    @*//TEST*@
-    <button type="submit">Spara</button>
-    <button @onclick="BackButton">Tillbaka</button>
-</form>
+        @*//TEST*@
+        <button type="submit">Spara</button>
+        <button @onclick="BackButton">Tillbaka</button>
+    </form>
+</div>
 
 
 
@@ -124,7 +127,7 @@
 
     public void UpdateStatus(int value)
     {
-        
+
         if (value == 0)
         {
             CurrentRealEstateAgent.IsActive = false;
