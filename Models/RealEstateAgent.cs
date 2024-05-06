@@ -1,4 +1,6 @@
-﻿namespace FribergHomezClient.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FribergHomezClient.Models
 {
     public class RealEstateAgent
     {
@@ -14,11 +16,12 @@
             }
             set { }
         }
-        
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string ImageUrl { get; set; }
         public int? FirmId { get; set; }
+     
+        [Required]
         public bool IsActive { get; set; } = true;
 
         //Navigation Properties

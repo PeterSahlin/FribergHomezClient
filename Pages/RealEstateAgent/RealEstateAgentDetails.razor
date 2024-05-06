@@ -6,36 +6,70 @@
 @inject NavigationManager navMan
 
 @*Peter*@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h3>Detaljer för @CurrentRealEstateAgent.FullName</h3>
 
-<h3>Detaljer för @CurrentRealEstateAgent.FullName</h3>
+            @if (CurrentRealEstateAgent != null)
+            {
+                <div class="card" style="height:auto; padding-left:50px; padding-right:50px; padding-top:20px; padding-bottom:20px; width:75%; ">
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <img src="@CurrentRealEstateAgent.ImageUrl" class="card-img" alt="@CurrentRealEstateAgent.FullName" style="width:220px;" />
+                    </div>
+                   
+                        <div class="mt-3">
+                            <p><b>Förnamn:</b> @CurrentRealEstateAgent.FirstName</p>
+                        </div>
+                        <div>
+                        <p><b>Efternamn:</b> @CurrentRealEstateAgent.LastName</p>
+                        </div>
+                        <div>
+                        <p><b>E-post:</b> @CurrentRealEstateAgent.Email</p>
+                        </div>
+                        <div>
+                        <p><b>Telefonnummer:</b> @CurrentRealEstateAgent.PhoneNumber</p>
+                        </div>
+                        <div>
+                        <p><b>Mäklarfirma:</b> @CurrentRealEstateAgent.Firm?.Name</p>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-auto">
+                                <p><b>Status:</b></p>
+                            </div>
+                            <div class="col">
+                                @if (CurrentRealEstateAgent.IsActive == true)
+                                {
+                                    <p class="badge text-bg-success">Aktiv</p>
+                                }
+                                else
+                                {
+                                    <p class="badge text-bg-danger">Inaktiv</p>
+                                }
+                            </div>
+                        </div>
 
-@if (CurrentRealEstateAgent != null)
-{
-    <div>
-        <img src="@CurrentRealEstateAgent.ImageUrl" width="100px" />
-        <p>Förnamn: </p>
-        <p>@CurrentRealEstateAgent.FirstName</p>
-        <p>Efternamn: </p>
-        <p>@CurrentRealEstateAgent.LastName</p>
-        <p>E-post: </p>
-        <p>@CurrentRealEstateAgent.Email</p>
-        <p>Telefonnummer: </p>
-        <p>@CurrentRealEstateAgent.PhoneNumber</p>
-        <p>Mäklarfirma: </p>
-        <p>@CurrentRealEstateAgent.Firm?.Name</p>
-        <p>Status: </p>
-        @if (CurrentRealEstateAgent.IsActive == true)
-        {
-            <p>Aktiv</p>
-        }
-        else
-        {
-            <p>Inaktiv</p>
-        }
+                        @*  <p>Status: </p>
+                    @if (CurrentRealEstateAgent.IsActive == true)
+                    {
+                    <p>Aktiv</p>
+                    }
+                    else
+                    {
+                    <p>Inaktiv</p>
+                    } *@
+
+                    <button class="btn btn-info" @onclick="BackButton">Tillbaka</button>
+
+                    </div>
+               
+
+
+
+            }
+        </div>
     </div>
-
-    <button @onclick="BackButton">Tillbaka</button>
-}
+</div>
 
 
 
@@ -45,36 +79,36 @@
 
 
 
-@code {
-    /* TO DO
+            @code {
+                /* TO DO
 
-    *Button to go back to agentlist
-    */
-
-
+                *Button to go back to agentlist
+                */
 
 
-    //PROPERTIES
-    [Parameter]
-    public int Id { get; set; }
-    public RealEstateAgent CurrentRealEstateAgent { get; set; } = new RealEstateAgent();
 
 
-    //METHODS
-    protected override async Task OnInitializedAsync()
-    {
-        var agentResponse = await httpClient.GetAsync($"api/RealEstateAgent/{Id}");
-        if (agentResponse.IsSuccessStatusCode)
-        {
-            CurrentRealEstateAgent = await agentResponse.Content.ReadFromJsonAsync<RealEstateAgent>();
-        }
+                //PROPERTIES
+                [Parameter]
+                public int Id { get; set; }
+                public RealEstateAgent CurrentRealEstateAgent { get; set; } = new RealEstateAgent();
 
-    }
 
-    public async Task BackButton()
-    {
-        navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
-    }
+                //METHODS
+                protected override async Task OnInitializedAsync()
+                {
+                    var agentResponse = await httpClient.GetAsync($"api/RealEstateAgent/{Id}");
+                    if (agentResponse.IsSuccessStatusCode)
+                    {
+                        CurrentRealEstateAgent = await agentResponse.Content.ReadFromJsonAsync<RealEstateAgent>();
+                    }
+
+                }
+
+                public async Task BackButton()
+                {
+                    navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
+                }
 
 
 
