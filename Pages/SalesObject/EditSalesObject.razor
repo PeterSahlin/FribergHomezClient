@@ -8,78 +8,44 @@
 <h3>Redigera försäljningsobjekt</h3>
 @if (saleObject != null)
 {
-    <form @onsubmit="UpdateSaleObject">
-        <div>
-            <input type="text" id="address" class="form-control" placeholder="Adress" @bind="saleObject.Address" required />
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Adress" @bind="saleObject.Address" required />
         </div>
-        <div>
-            <input type="number" id="startingPriceInput" class="form-control" placeholder="Utgångspris" @bind="saleObject.StartingPrice" />
+        <div class="col-md-3">
+            <input type="number" class="form-control" placeholder="Utgångspris" @bind="saleObject.StartingPrice" />
         </div>
-        <div>
-            <input type="number" id="LivingAreaInput" class="form-control" placeholder="Boarea" @bind="saleObject.LivingArea" />
+        <div class="col-md-3">
+            <input type="number" class="form-control" placeholder="Boarea" @bind="saleObject.LivingArea" />
         </div>
-        <div>
-            <input type="number" id="newAncillaryAreaInput" class="form-control" placeholder="Biarea" @bind="saleObject.AncillaryArea" />
+        <div class="col-md-3">
+            <input type="number" class="form-control" placeholder="Biarea" @bind="saleObject.AncillaryArea" />
         </div>
-        <div>
-            <input type="number" id="newPlotAreaInput" class="form-control" placeholder="Tomtarea" @bind="saleObject.PlotArea" />
-        </div>
-        <div>
-            <textarea id="newDescriptionInput" class="form-control" placeholder="Beskrivning" @bind="saleObject.Description" rows="3"></textarea>
-        </div>
-        <div>
-            <input type="number" id="newNumberOfRoomsInput" class="form-control" placeholder="Antal rum" @bind="saleObject.NumberOfRooms" />
-        </div>
-        <div>
-            <input type="number" id="newMonthlyFeeInput" class="form-control" placeholder="Månadsavgift" @bind="saleObject.MonthlyFee" />
-        </div>
-        <div>
-            <input type="number" id="newOperatingCostPerYearInput" class="form-control" placeholder="Årsavgift" @bind="saleObject.OperatingCostPerYear" />
-        </div>
-        <div>
-            <input type="number" id="newYearOfConstructionInput" class="form-control" placeholder="Byggår" @bind="saleObject.YearOfConstruction" />
-        </div>
-        <div>
-            <select id="categoryDropdown" class="form-select" placeholder="Kategori" @bind="saleObject.CategoryId">
-                <option value="">Välj kategori</option>
-                @foreach (var category in Categories)
-                {
-                    <option value="@category.Id">@category.Name</option>
-                }
-            </select>
-        </div>
+    </div>
 
-        <div>
-            <select id="municipalityDropdown" class="form-select" placeholder="Kommun" @bind="saleObject.MunicipalityId">
-                <option value="">Välj kommun</option>
-                @foreach (var municipality in Municipalities)
-                {
-                    <option value="@municipality.Id">@municipality.Name</option>
-                }
-            </select>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <input type="number" class="form-control" placeholder="Tomtarea" @bind="saleObject.PlotArea" />
         </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Beskrivning" @bind="saleObject.Description" />
+        </div>
+        <div class="col-md-3">
+            <input type="number" class="form-control" placeholder="Antal rum" @bind="saleObject.NumberOfRooms" />
+        </div>
+        <div class="col-md-3">
+            <input type="number" class="form-control" placeholder="Månadsavgift" @bind="saleObject.MonthlyFee" />
+        </div>
+    </div>
 
-        <div>
-            <select id="realEstateAgentDropdown" class="form-select" placeholder="Mäklare" @bind="saleObject.RealEstateAgentId">
-                <option value="">Välj mäklare</option>
-                @foreach (var agent in RealEstateAgents)
-                {
-                    <option value="@agent.Id">@agent.FirstName @agent.LastName</option>
-                }
-            </select>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <input type="number" class="form-control" placeholder="Årsavgift" @bind="saleObject.OperatingCostPerYear" />
         </div>
-        <div class="row">
-            @foreach (var image in saleObject.ImageUrl)
-            {
-                <div class="col-md-3 mb-3">
-                    <div class="image-container">
-                        <img class="saleObjectImage img-fluid" src=@image />
-                        <button type="button" class="btn btn-danger btn-sm mt-2" @onclick="() => RemoveImgUrl(image)">Remove</button>
-                    </div>
-                </div>
-            }
+        <div class="col-md-3">
+            <input type="number" class="form-control" placeholder="Byggår" @bind="saleObject.YearOfConstruction" />
         </div>
-        <div>
+        <div class="col-md-3">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Bildurl" @bind="addNewImgUrl" />
                 <button type="button" class="btn btn-primary" @onclick="AddImgUrl">Lägg till bild</button>
@@ -91,11 +57,27 @@
                 </div>
             }
         </div>
-        <div>
-            <button type="submit" class="btn btn-success">Spara</button>
-            <button type="button" class="btn btn-danger" @onclick="ReturnToListAll">Avbryt</button>
+        <div class="col-md-3"></div>
+    </div>
+
+    <div class="row mb-3">
+        @foreach (var image in saleObject.ImageUrl)
+        {
+            <div class="col-md-3 mb-3">
+                <div class="image-container">
+                    <img class="img-fluid" src="@image" alt="Image" />
+                    <button type="button" class="btn btn-danger btn-sm mt-2" @onclick="() => RemoveImgUrl(image)">Remove</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <button class="btn btn-success me-2" @onclick="UpdateSaleObject">Spara</button>
+            <button class="btn btn-danger" @onclick="ReturnToListAll">Avbryt</button>
         </div>
-    </form>
+    </div>
 }
 @code {
 
@@ -197,4 +179,9 @@
         .popup .popuptext {
             color: #333;
         }
+
+    .img-fluid{
+        max-width: 100px;
+        height: auto;
+    }
 </style>

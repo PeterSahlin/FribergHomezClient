@@ -4,22 +4,27 @@
 @using System.Net.Http.Json
 @using System.Text.Json
 @inject HttpClient httpClient
+@inject NavigationManager navMan
 
 @*Henrik*@
-<h3>Redigera Kategori</h3>
+<div class="container">
+    <h3 class="mb-4">Redigera Kategori</h3>
 
-   @if (category != null)
-   {
-    <form @onsubmit="UpdateCategory">
-        <div>
-            <label for="Name">Namn:</label>
-            <input type="text" id="Name" @bind="category.Name" required />
-        </div>
-        <div>
-            <button type="submit">Spara</button>
-        </div>
-    </form>
-   }
+    @if (category != null)
+    {
+        <form @onsubmit="UpdateCategory">
+            <div class="mb-3">
+                <input type="text" id="Name" class="form-control" @bind="category.Name" required placeholder="Namn" style="max-width: 500px;"/>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success me-2">Spara</button>
+                    <button class="btn btn-danger" @onclick="ReturnToPreviousPage">Avbryt</button>
+                </div>
+            </div>
+        </form>
+    }
+</div>
 
 @code {
     [Parameter]
@@ -55,6 +60,10 @@
         {
             Console.WriteLine(ex);
         }
+    }
+    private void ReturnToPreviousPage()
+    {
+        navMan.NavigateTo("/Category/ListAllCategories");
     }
 
 }

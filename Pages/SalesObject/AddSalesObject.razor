@@ -8,7 +8,7 @@
 
 @*Henrik*@
 
-<h1 class="mb-4">Lägg till nytt objekt</h1>
+<h3>Lägg till nytt objekt</h3>
 
 <div class="row mb-3">
     <div class="col-md-3">
@@ -75,42 +75,9 @@
 </div>
 
 <div class="row mb-3">
-    <div class="col-md-3">
-        <select id="categoryDropdown" class="form-select" placeholder="Kategori" @bind="newCategoryId">
-            <option value="">Välj kategori</option>
-            @foreach (var category in Categories)
-            {
-                <option value="@category.Id">@category.Name</option>
-            }
-        </select>
-    </div>
-    <div class="col-md-3">
-        <select id="municipalityDropdown" class="form-select" placeholder="Kommun" @bind="newMunicipalityId">
-            <option value="">Välj kommun</option>
-            @foreach (var municipality in Municipalities)
-            {
-                <option value="@municipality.Id">@municipality.Name</option>
-            }
-        </select>
-    </div>
-    <div class="col-md-3">
-        <select id="realEstateAgentDropdown" class="form-select" placeholder="Mäklare" @bind="newRealEstateId">
-            <option value="">Välj mäklare</option>
-            @foreach (var agent in RealEstateAgents)
-            {
-                <option value="@agent.Id">@agent.FirstName @agent.LastName</option>
-            }
-        </select>
-    </div>
-    <div class="col-md-3"></div>
-</div>
-
-<div class="row mb-3">
     <div class="col-md-6">
-        <button class="btn btn-success" @onclick="AddNewSaleObject">Save</button>
-    </div>
-    <div class="col-md-6">
-        <button class="btn btn-primary" @onclick="ReturnToPreviousPage">Tillbaka till alla</button>
+        <button class="btn btn-success me-2" @onclick="AddNewSaleObject">Spara</button>
+        <button class="btn btn-danger" @onclick="ReturnToPreviousPage">Avbryt</button>
     </div>
 </div>
 @code {

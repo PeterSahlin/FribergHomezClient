@@ -4,44 +4,64 @@
 @using System.Text.Json
 @inject HttpClient httpClient
 @inject NavigationManager navMan
+@inject IJSRuntime JSRuntime
+
+<script>
+    window.confirmDelete = function () {
+        return confirm('Är du säker på att du vill ta bort detta objekt?');
+    }
+</script>
 
 @*Henrik*@
-<h3>Alla Mäklarfirmor</h3>
+<div class="container">
+    <h3 class="mb-4">Alla Mäklarfirmor</h3>
 
-<div>
-    <button @onclick="NavigateToAddNewFirmPage">Lägg till ny firma</button>
+    <div class="mb-3">
+        <button class="btn btn-primary" @onclick="NavigateToAddNewFirmPage">Lägg till ny firma</button>
+    </div>
+
+    @if (Firms == null)
+    {
+        <p>Couldn't load firms.</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Namn</th>
+                        <th>Presentation</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Firms)
+                    {
+                        @if (item.IsActive)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td style="max-width: 700px;">@item.Presentation</td>
+                                <td>
+                                    <button class="btn btn-info" @onclick="@(e => NavigateToFirmDetails(item.Id))">Detaljer</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-warning" @onclick="@(e => NavigateToEditFirm(item.Id))">Redigera</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteFirm(item.Id))">Ta bort</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
-
-@if (Firms == null)
-{
-    <p> Couldn't load firms.</p>
-}
-
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>Namn</th>
-                <th>Presentation</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Firms)
-            {
-                @if (item.IsActive)
-                {
-                    <tr>@item.Name</tr>
-                    <tr>@item.Presentation</tr>
-                    <tr>@item.ImageLocation</tr>
-                <td><button @onclick="@(e => NavigateToFirmDetails(item.Id))">Detaljer</button></td>
-                <td><button @onclick="@(e => NavigateToEditFirm(item.Id))">Redigera</button></td>
-                <td><button @onclick="@(e => NavigateToDeleteFirm(item.Id))">Ta bort</button></td>
-                }
-            }
-        </tbody>
-    </table>
-}
 
 @code {
     public List<Firm>? Firms;
@@ -69,7 +89,10 @@ else
 
     private async Task NavigateToDeleteFirm(int id)
     {
-        await httpClient.DeleteAsync($"/api/Firm/{id}");
-        await OnInitializedAsync();
+        if (await JSRuntime.InvokeAsync<bool>("confirmDelete"))
+        {
+            await httpClient.DeleteAsync($"/api/Firm/{id}");
+            await OnInitializedAsync();
+        }
     }
 }

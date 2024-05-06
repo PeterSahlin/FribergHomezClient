@@ -6,28 +6,30 @@
 @inject HttpClient httpClient
 
 @*Henrik*@
-<h3>Redigera</h3>
+<div class="container">
+    <h3>Redigera</h3>
 
-@if (firm != null)
-{
-    <form @onsubmit="UpdateCategory">
-        <div>
-            <label for="Name">Namn:</label>
-            <input type="text" id="Name" @bind="firm.Name" required />
-        </div>
-        <div>
-            <label for="Presentation">Presentation:</label>
-            <input type="text" id="Name" @bind="firm.Presentation" required />
-        </div>
-        <div>
-            <label for="ImageLocation">IMG Location:</label>
-            <input type="text" id="ImageLocation" @bind="firm.ImageLocation" required />
-        </div>
-        <div>
-            <button type="submit">Spara</button>
-        </div>
-    </form>
-}
+    @if (firm != null)
+    {
+        <form @onsubmit="UpdateCategory">
+            <div class="mb-3">
+                <input type="text" class="form-control" id="Name" placeholder="Namn" @bind="firm.Name" required style="max-width: 500px;"/>
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control" id="Presentation" placeholder="Presentation" @bind="firm.Presentation" required rows="3" style="max-width: 500px;"></textarea>
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="ImageLocation" placeholder="IMG Location" @bind="firm.ImageLocation" required style="max-width: 500px;" />
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-success me-2">Spara</button>
+                    <button class="btn btn-danger" @onclick="ReturnToPreviousPage">Avbryt</button>
+                </div>
+            </div>
+        </form>
+    }
+</div>
 
 @code {
     [Parameter]
@@ -63,6 +65,10 @@
         {
             Console.WriteLine(ex);
         }
+    }
+    private void ReturnToPreviousPage()
+    {
+        navMan.NavigateTo("/Firm/ListAllFirms");
     }
 
 }
