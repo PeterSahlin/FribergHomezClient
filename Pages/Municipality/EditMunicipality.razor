@@ -6,30 +6,29 @@
 @inject HttpClient httpClient
 
 
+<div class="container">
+    <h1 class="mb-4">Redigera kommun</h1>
+    @if (CurrentMunicipality != null)
+    {
+        <form @onsubmit="UpdateMunicipality">
+            <div class="col-md-3 mb-3">
+                <label for="Name">Namn</label>
+                <input type="text" class="form-control" id="name" @bind="CurrentMunicipality.Name" required />
+            </div>
 
-<h3>Redigera kommun</h3>
-@if (CurrentMunicipality != null)
-{
-    <form @onsubmit="UpdateMunicipality">
-        <div>
-            <label for="Name">Namn:</label>
-            <input type="text" id="name" @bind="CurrentMunicipality.Name" required />
-        </div>
-
-        <div>
-            <button type="submit">Spara</button>
-            <button type="button" onclick="window.history.back();">Tillbaka</button>
-        </div>
-    </form>
- 
-
-}
+            <div>
+                <button type="submit" class="btn btn-success" >Spara</button>
+                <button type="button" class="btn btn-danger" onclick="window.history.back();">Avbryt</button>
+            </div>
+        </form>
+    }
+</div>
 @code {
     [Parameter]
     public int Id { get; set; }
     public Municipality CurrentMunicipality = new Municipality();
     public Municipality newMunicipality;
-   
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,7 +37,7 @@
         {
             CurrentMunicipality = await municipalityResponse.Content.ReadFromJsonAsync<Municipality>();
         }
-       
+
     }
 
     private async Task UpdateMunicipality()
@@ -61,6 +60,4 @@
             Console.WriteLine(ex);
         }
     }
-
- 
 }

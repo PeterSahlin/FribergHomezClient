@@ -6,15 +6,17 @@
 @inject NavigationManager navMan
 
 
+<div class="container">
+    <h1 class="mb-4">Lägg till ny kommun</h1>
 
-<h3>Lägg till en kommun</h3>
-
-<div>
-    <label for="municipalityInput">Kommun:</label>
-    <input type="text" id="municipalityInput" @bind="newMunicipality" />
+    <div class="col-md-3 mb-3">
+        <input type="text" class="form-control" placeholder="Kommun" @bind="newMunicipality" />
+    </div>
+    <div>
+        <button type="submit" class="btn btn-success" @onclick="AddNewMunicipality">Lägg till</button>
+        <button type="button" class="btn btn-danger" @onclick="ReturnToPreviousPage">Avbryt</button>
+    </div>
 </div>
-
-<button @onclick="AddNewMunicipality">Lägg till</button>
 
 @code {
     private string newMunicipality = "";
@@ -32,7 +34,7 @@
             if (response.IsSuccessStatusCode)
             {
                 navMan.NavigateTo("/Municipality/ListAllMunicipalities");
-        
+
             }
             else
             {
@@ -43,5 +45,9 @@
         {
             Console.WriteLine(ex);
         }
+    }
+    private void ReturnToPreviousPage()
+    {
+        navMan.NavigateTo("/Municipality/ListAllMunicipalities");
     }
 }
