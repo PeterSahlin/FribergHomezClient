@@ -3,6 +3,14 @@
 @using System.Net.Http.Json
 @using System.Text.Json
 @inject HttpClient httpClient
+@inject NavigationManager navMan
+@inject IJSRuntime JSRuntime
+
+<script>
+    window.confirmDelete = function () {
+        return confirm('Är du säker på att du vill ta bort detta objekt?');
+    }
+</script>
 
 <h3 class="mb-4">Mina försäljningsobjekt</h3>
 @if (MySalesObjectList != null)
@@ -13,6 +21,9 @@ else
 {
     <p class="text-danger mb-4">Kunde inte ladda försäljningsobjekt.</p>
 }
+<div>
+    <button class="btn btn-primary" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
+</div>
 
 @if (MySalesObjectList == null)
 {
@@ -47,10 +58,12 @@ else
                             }
                         </td>
                         <td>@item.Address</td>
-                        <td>@item.Description</td>
+                        <td style="max-width: 500px;">@item.Description</td>
                         <td>@item.StartingPrice.ToString("N0") kr</td>
                         <td>@item.Category.Name</td>
                         <td>@item.Municipality.Name</td>
+                        <td><button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button></td>
+                        <td><button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button></td>
                     </tr>
                 }
             </tbody>
@@ -79,6 +92,23 @@ else
             AllSalesObjectList = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
             MySalesObjectList = AllSalesObjectList.Where(o => o.RealEstateAgentId == LoggedInAgent).ToList();
         }
+    }
+    private void NavigateToEditSalesObject(int id)
+    {
+        string previousPageUrl = "/SalesObject/REAgentSalesObjects";
+        navMan.NavigateTo($"/SalesObject/EditSalesObject/{id}?previousPage={previousPageUrl}");
+    }
+    private async Task NavigateToDeleteSalesObject(int id)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirmDelete"))
+        {
+            await httpClient.DeleteAsync($"/api/salesObject/{id}");
+            await OnInitializedAsync();
+        }
+    }
+    private void NavigateToAddSalesObjectPage()
+    {
+        navMan.NavigateTo("/SalesObject/AddSalesObject");
     }
 
     /*

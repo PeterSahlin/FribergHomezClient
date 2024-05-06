@@ -6,22 +6,27 @@
 @inject NavigationManager navMan
 
 @*Henrik*@
-<h3>Lägg till ny firma</h3>
+<div class="container">
+    <h3 class="mb-4">Lägg till ny firma</h3>
 
-<div>
-    <label for="nameInput">Namn:</label>
-    <input type="text" id="nameInput" @bind="newName" />
-</div>
-<div>
-    <label for="presentationInput">Presentation:</label>
-    <input type="text" id="presentationInput" @bind="newPresentation" />
-</div>
-<div>
-    <label for="imageLocationInput">Imgage location:</label>
-    <input type="text" id="imageLocationInput" @bind="newImageLocation" />
+    <div class="mb-3">
+        <input type="text" id="nameInput" class="form-control" @bind="newName" placeholder="Namn" style="max-width: 500px;"/>
+    </div>
+    <div class="mb-3">
+        <input type="text" id="presentationInput" class="form-control" @bind="newPresentation" placeholder="Presentation" style="max-width: 500px;" />
+    </div>
+    <div class="mb-3">
+        <input type="text" id="imageLocationInput" class="form-control" @bind="newImageLocation" placeholder="Image location" style="max-width: 500px;" />
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <button class="btn btn-success me-2" @onclick="AddNewFirm">Spara</button>
+            <button class="btn btn-danger" @onclick="ReturnToPreviousPage">Avbryt</button>
+        </div>
+    </div>
 </div>
 
-<button @onclick="AddNewFirm">Save</button>
+
 
 @code {
     private string newName;
@@ -53,5 +58,9 @@
         {
             Console.WriteLine(ex);
         }
+    }
+    private void ReturnToPreviousPage()
+    {
+        navMan.NavigateTo("/Firm/ListAllFirms");
     }
 }
