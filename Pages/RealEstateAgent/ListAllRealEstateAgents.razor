@@ -257,20 +257,20 @@ else
     }
 
     //agent details
-    private void NavigateToRealEstateAgentDetails(int id)
+    private void NavigateToRealEstateAgentDetails(string id)
     {
         navMan.NavigateTo($"/RealEstateAgent/RealEstateAgentDetails/{id}");
     }
 
     //edit agent
-    private void NavigateToEditRealEstateAgent(int id)
+    private void NavigateToEditRealEstateAgent(string id)
     {
         navMan.NavigateTo($"/RealEstateAgent/EditRealEstateAgent/{id}");
     }
 
 
     //delete agent by setting inactive
-    public async Task SetAgentInactive(int id)
+    public async Task SetAgentInactive(string id)
     {
         if (await JSRuntime.InvokeAsync<bool>
     ("confirmDelete"))
@@ -282,7 +282,7 @@ else
 
 
     //delete inactive agent permanently
-    private async Task NavigateToDeleteInactiveRealEstateAgent(int id)
+    private async Task NavigateToDeleteInactiveRealEstateAgent(string id)
     {
         if (await JSRuntime.InvokeAsync<bool>
             ("confirmDelete"))
