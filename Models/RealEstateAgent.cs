@@ -20,7 +20,7 @@ namespace FribergHomezClient.Models
         public string PhoneNumber { get; set; }
         public string ImageUrl { get; set; }
         public int? FirmId { get; set; }
-        public string Username { get; set; } 
+        //public string Username { get; set; } 
         public string Password { get; set; }
      
         [Required]
@@ -39,7 +39,7 @@ namespace FribergHomezClient.Models
             ImageUrl = imageUrl;
             IsActive = isActive;
             FirmId = firmId;
-            Username = email;
+            //Username = email;
             Password = password;
         }
         public RealEstateAgent() { }

@@ -46,7 +46,16 @@
             }
         </select>
     </div>
-
+    <div class="row mb-3">
+        <div class="col-auto">
+            <input class="btn-check mb-3" type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
+            <label class="btn btn-outline-success btn-sm" for="activeRadio">Aktiv</label>
+        </div>
+        <div class="col-auto">
+            <input type="radio" class="btn-check" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
+            <label class="btn btn-outline-danger btn-sm" for="inactiveRadio">Inaktiv</label>
+        </div>
+    </div>
     @* <button @onclick="AddRealEstateAgentAsync">Spara</button> *@
     <button type="submit">Spara</button>
 </form>
@@ -57,6 +66,7 @@
     public string newImgUrl { get; set; }
     public List<Firm> FirmList { get; set; } = new List<Firm>();
     public RealEstateAgent NewRealEstateAgent { get; set; } = new RealEstateAgent();
+    public required int StatusValue { get; set; } = 2;
     // public Firm NewAgentFirm { get; set; }
 
 
@@ -103,6 +113,29 @@
 
 
         }
+
+    }
+    public void UpdateStatus(int value)
+    {
+
+        if (value == 0)
+        {
+            NewRealEstateAgent.IsActive = false;
+        }
+        else if (value == 1)
+        {
+            NewRealEstateAgent.IsActive = true;
+        }
+        // var value = Convert.ToInt32(e.Value);
+        // switch (value)
+        // {
+        //     case 0:
+        //         CurrentRealEstateAgent.IsActive = false;
+        //         break;
+        //     case 1:
+        //         CurrentRealEstateAgent.IsActive = true;
+        //         break;
+        // }
 
     }
 }

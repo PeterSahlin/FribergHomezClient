@@ -61,7 +61,36 @@
     </div>
     <div class="col-md-3"></div>
 </div>
+<div>
+    
+    <select id="categoryDropDown" placeholder="Kategori" @bind="newCategoryId">
+        <option>Välj kategori</option>
+        @foreach (var category in Categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </select>
+</div>
+<div>
 
+    <select id="realEstateAgentDropDown" placeholder="Mäklare" @bind="newRealEstateId">
+        <option>Välj mäklare</option>
+        @foreach (var agent in RealEstateAgents)
+        {
+            <option value="@agent.Id">@agent.FullName</option>
+        }
+    </select>
+</div>
+<div>
+
+    <select id="municipalityDropDown" placeholder="Kommun" @bind="newMunicipalityId">
+        <option>Välj kommun</option>
+        @foreach (var municipality in Municipalities)
+        {
+            <option value="@municipality.Id">@municipality.Name</option>
+        }
+    </select>
+</div>
 <div class="row mb-3">
     @foreach (var imageUrl in newImgUrl)
     {
@@ -93,7 +122,7 @@
     private int? newYearOfConstruction;
     private int newCategoryId;
     private int newMunicipalityId;
-    private int newRealEstateId;
+    private string? newRealEstateId;
     public List<string> newImgUrl = new List<string>();
     private string addNewImgUrl;
     private bool showPopup = false;
