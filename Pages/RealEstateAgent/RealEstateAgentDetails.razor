@@ -1,4 +1,4 @@
-﻿@page "/RealEstateAgent/RealEstateAgentDetails/{Id:int}"
+﻿@page "/RealEstateAgent/RealEstateAgentDetails/{Id:guid}"
 @using FribergHomezClient.Models
 @using System.Net.Http.Json
 @using System.Text.Json
@@ -90,7 +90,7 @@
 
                 //PROPERTIES
                 [Parameter]
-                public int Id { get; set; }
+                public Guid Id { get; set; }
                 public RealEstateAgent CurrentRealEstateAgent { get; set; } = new RealEstateAgent();
 
 

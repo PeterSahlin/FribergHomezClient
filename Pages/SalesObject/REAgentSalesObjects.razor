@@ -74,14 +74,14 @@ else
 @code
 {
     //properties
-    public int LoggedInAgent { get; set; }
+    public string LoggedInAgent { get; set; }
     public List<SaleObject>? AllSalesObjectList { get; set; }
     public List<SaleObject>? MySalesObjectList { get; set; }
 
     //methods
     protected override async Task OnInitializedAsync()
     {
-        LoggedInAgent = 1; //Sätt till inloggad user efter identity
+        LoggedInAgent = "03a98726-8e27-453f-9805-d8293c94da53"; //Sätt till inloggad user efter identity
         var response = await httpClient.GetAsync("/api/salesobject");
         if (response == null)
         {
