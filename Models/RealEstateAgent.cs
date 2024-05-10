@@ -7,6 +7,7 @@ namespace FribergHomezClient.Models
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Username { get; set; }
 
         public string FullName
         {
@@ -39,7 +40,7 @@ namespace FribergHomezClient.Models
             ImageUrl = imageUrl;
             IsActive = isActive;
             FirmId = firmId;
-            //Username = email;
+            Username = email;
             Password = password;
         }
         public RealEstateAgent() { }

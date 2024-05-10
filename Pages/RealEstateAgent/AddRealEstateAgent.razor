@@ -11,7 +11,7 @@
 
 <h3>Lägg till mäklare</h3>
 
-<form @onsubmit="AddRealEstateAgentAsync">
+<form @onsubmit="AddRealEstateAgentAsync">  
     <div>
         <label for="firstname">Förnamn:</label>
         <input type="text" id="firstname" @bind="NewRealEstateAgent.FirstName" />
@@ -65,7 +65,7 @@
 @code {
     public string newImgUrl { get; set; }
     public List<Firm> FirmList { get; set; } = new List<Firm>();
-    public RealEstateAgent NewRealEstateAgent { get; set; } = new RealEstateAgent();
+    public AgentDto NewRealEstateAgent { get; set; } = new AgentDto();
     public required int StatusValue { get; set; } = 2;
     // public Firm NewAgentFirm { get; set; }
 
@@ -85,7 +85,7 @@
 
     public async Task AddRealEstateAgentAsync()
     {
-        // var agentToAdd = new RealEstateAgent();
+        //var agentToAdd = new RealEstateAgent();
 
         var agentToAdd = NewRealEstateAgent;
         if (agentToAdd.FirmId != null)
