@@ -49,41 +49,90 @@
                     <div class="col">
                         <div class="card">
                             <a href="/SalesObject/SalesObjectDetails/@item.Id">
-                            <div id="carouselExampleControls_@item.Id" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                    @foreach (var image in item.ImageUrl)
-                                    {
-                                        <div class="carousel-item @(image == item.ImageUrl.First() ? "active" : "")">
-                                            <img src="@image" class="d-block w-100" alt="..." />
-                                        </div>
-                                    }
+                                <div id="carouselExampleControls_@item.Id" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        @foreach (var image in item.ImageUrl)
+                                        {
+                                            <div class="carousel-item @(image == item.ImageUrl.First() ? "active" : "")">
+                                                <img src="@image" class="d-block w-100" alt="..." />
+                                            </div>
+                                        }
+                                    </div>
+                                    @*                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                        </button> *@
                                 </div>
-@*                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button> *@
-                            </div>
 
-                            <div class="card-body">
-                                <h5 class="card-title">@item.Address</h5>
-                                <p class="card-text">Utgångspris: @item.StartingPrice.ToString("N0") kr</p>
-                                <p class="card-text">Rum: @item.NumberOfRooms</p>
-                                <p class="card-text">Boarea: @item.LivingArea m²</p>
-                                <!-- Add other details as needed -->
-                            </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Address</h5>
+                                    <p class="card-text">Utgångspris: @item.StartingPrice.ToString("N0") kr</p>
+                                    <p class="card-text">Rum: @item.NumberOfRooms</p>
+                                    <p class="card-text">Boarea: @item.LivingArea m²</p>
+                                    <!-- Add other details as needed -->
+                                </div>
                             </a>
-                                <button class="btn btn-info" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button>
-                                <button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button>
-                                <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button>
+                            <button class="btn btn-info" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button>
+                            <button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button>
+                            <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button>
                         </div>
                     </div>
                 }
             }
         </div>
+        @if (InactiveObjects.Any())
+        {
+
+
+            <h1>Sålda fastighetsobjekt</h1>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                @foreach (var item in FilteredObjects)
+                {
+                    if (item.IsActive == false)
+                    {
+                        <div class="col">
+                            <div class="card">
+                                <a href="/SalesObject/SalesObjectDetails/@item.Id">
+                                    <div id="carouselExampleControls_@item.Id" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            @foreach (var image in item.ImageUrl)
+                                            {
+                                                <div class="carousel-item @(image == item.ImageUrl.First() ? "active" : "")">
+                                                    <img src="@image" class="d-block w-100" alt="..." />
+                                                </div>
+                                            }
+                                        </div>
+                                        @*                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                        </button> *@
+                                    </div>
+
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.Address</h5>
+                                        <p class="card-text">Utgångspris: @item.StartingPrice.ToString("N0") kr</p>
+                                        <p class="card-text">Rum: @item.NumberOfRooms</p>
+                                        <p class="card-text">Boarea: @item.LivingArea m²</p>
+                                        <!-- Add other details as needed -->
+                                    </div>
+                                </a>
+                                <button class="btn btn-info" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button>
+                                <button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button>
+                                <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
     }
 </div>
 
@@ -93,6 +142,7 @@
     public SaleObject SaleObjectToDelete;
     public List<SaleObject>? SaleObjects;
     public List<SaleObject>? FilteredObjects;
+    public List<SaleObject>? InactiveObjects;
     public List<Municipality> Municipalities = new List<Municipality>();
 
     protected override async Task OnInitializedAsync()
@@ -102,6 +152,7 @@
         {
             SaleObjects = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
             FilteredObjects = SaleObjects;
+            InactiveObjects = SaleObjects.Where(o => o.IsActive == false).ToList();
         }
 
         var municipalityResponse = await httpClient.GetAsync("/api/municipalities");

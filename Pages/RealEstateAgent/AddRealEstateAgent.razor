@@ -4,61 +4,71 @@
 @using System.Text.Json
 @inject HttpClient httpClient
 @inject NavigationManager navMan
+@inject IJSRuntime JSRuntime
 
 @*Peter*@
 
 <PageTitle>Lägg till mäklare</PageTitle>
 
-<h3>Lägg till mäklare</h3>
 
-<form @onsubmit="AddRealEstateAgentAsync">  
-    <div>
-        <label for="firstname">Förnamn:</label>
-        <input type="text" id="firstname" @bind="NewRealEstateAgent.FirstName" />
-    </div>
-    <div>
-        <label for="lastname">Efternamn:</label>
-        <input type="text" id="lastname" @bind="NewRealEstateAgent.LastName" />
-    </div>
-    <div>
-        <label for="email">E-post:</label>
-        <input type="text" id="email" @bind="NewRealEstateAgent.Email" />
-    </div>
-    <div>
-        <label for="phonenumber">Telefonnummer:</label>
-        <input type="text" id="phonenumber" @bind="NewRealEstateAgent.PhoneNumber" />
-    </div>
-    <div>
-        <label for="password">Lösenord:</label>
-        <input type="text" id="password" @bind="NewRealEstateAgent.Password" />
-    </div>
-    <div>
-        <label for="imageurl">Bildlänk:</label>
-        <input type="text" id="imageurl" @bind="NewRealEstateAgent.ImageUrl" />
-    </div>
-    <div>
-        <label for="firmDropDown">Mäklarfirma:</label>
-        <select id="firmDropDown" @bind="NewRealEstateAgent.FirmId">
-            <option>Välj mäklarfirma</option>
-            @foreach (var firm in FirmList)
-            {
-                <option value="@firm.Id">@firm.Name</option>
-            }
-        </select>
-    </div>
-    <div class="row mb-3">
-        <div class="col-auto">
-            <input class="btn-check mb-3" type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
-            <label class="btn btn-outline-success btn-sm" for="activeRadio">Aktiv</label>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card" style="height:auto; padding-left:50px; padding-right:50px; padding-top:20px; padding-bottom:20px; ">
+                <h3>Lägg till mäklare</h3>
+                <form @onsubmit="AddRealEstateAgentAsync">
+                    <div>
+                        <label for="firstname">Förnamn:</label>
+                        <input type="text" class="form-control mb-3" id="firstname" @bind="NewRealEstateAgent.FirstName" />
+                    </div>
+                    <div>
+                        <label for="lastname">Efternamn:</label>
+                        <input type="text" class="form-control mb-3" id="lastname" @bind="NewRealEstateAgent.LastName" />
+                    </div>
+                    <div>
+                        <label for="email">E-post:</label>
+                        <input type="text" class="form-control mb-3" id="email" @bind="NewRealEstateAgent.Email" />
+                    </div>
+                    <div>
+                        <label for="phonenumber">Telefonnummer:</label>
+                        <input type="text" class="form-control mb-3" id="phonenumber" @bind="NewRealEstateAgent.PhoneNumber" />
+                    </div>
+                    <div>
+                        <label for="password">Lösenord:</label>
+                        <input type="text" class="form-control mb-3" id="password" @bind="NewRealEstateAgent.Password" />
+                    </div>
+                    <div>
+                        <label for="imageurl">Bildlänk:</label>
+                        <input type="text" class="form-control mb-3" id="imageurl" @bind="NewRealEstateAgent.ImageUrl" />
+                    </div>
+                    <div>
+                        <label for="firmDropDown">Mäklarfirma:</label>
+                        <select id="firmDropDown" class="btn btn-secondary btn-sm dropdown-toggle mt-3 mb-3" @bind="NewRealEstateAgent.FirmId">
+                            <option>Välj mäklarfirma</option>
+                            @foreach (var firm in FirmList)
+                            {
+                                <option value="@firm.Id">@firm.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="row mt-3 mb-3">
+                        <div class="col-auto">
+                            <input class="btn-check mb-3" type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
+                            <label class="btn btn-outline-success btn-sm" for="activeRadio">Aktiv</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="radio" class="btn-check" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
+                            <label class="btn btn-outline-danger btn-sm" for="inactiveRadio">Inaktiv</label>
+                        </div>
+                    </div>
+                    @* <button @onclick="AddRealEstateAgentAsync">Spara</button> *@
+                    <button class="btn btn-success" type="submit">Logga in</button>
+                    <button class="btn btn-danger" @onclick="BackButton">Avbryt</button>
+                </form>
+            </div>
         </div>
-        <div class="col-auto">
-            <input type="radio" class="btn-check" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
-            <label class="btn btn-outline-danger btn-sm" for="inactiveRadio">Inaktiv</label>
-        </div>
     </div>
-    @* <button @onclick="AddRealEstateAgentAsync">Spara</button> *@
-    <button type="submit">Spara</button>
-</form>
+</div>
 
 
 
@@ -137,5 +147,10 @@
         //         break;
         // }
 
+    }
+    public async Task BackButton()
+    {
+
+        await JSRuntime.InvokeVoidAsync("history.back");
     }
 }

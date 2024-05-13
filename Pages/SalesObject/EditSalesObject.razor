@@ -8,6 +8,7 @@
 <h3>Redigera försäljningsobjekt</h3>
 @if (saleObject != null)
 {
+    <form @onsubmit="@(e => {UpdateStatus(StatusValue); UpdateSaleObject();  })">
     <div class="row mb-3">
         <div class="col-md-3">
             <input type="text" class="form-control" placeholder="Adress" @bind="saleObject.Address" required />
@@ -73,11 +74,31 @@
     </div>
 
     <div class="row mb-3">
+        <div class="col-auto">
+            <input class="btn-check mb-3" type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
+            <label class="btn btn-outline-success btn-sm" for="activeRadio">Aktiv</label>
+        </div>
+        <div class="col-auto">
+            <input type="radio" class="btn-check" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
+            <label class="btn btn-outline-danger btn-sm" for="inactiveRadio">Inaktiv</label>
+        </div>
+    </div>
+
+    @if (showStatusPopup)
+    {
+
+        <div class="popup">
+            <span class="popuptext" style="color:red;">Du måste göra ett val.</span>
+        </div>
+    }
+
+    <div class="row mb-3">
         <div class="col-md-6">
-            <button class="btn btn-success me-2" @onclick="UpdateSaleObject">Spara</button>
+            <button class="btn btn-success me-2" type="submit" @* @onclick="UpdateSaleObject *@">Spara</button>
             <button class="btn btn-danger" @onclick="ReturnToListAll">Avbryt</button>
         </div>
     </div>
+    </form>
 }
 @code {
 
@@ -92,6 +113,8 @@
     public List<string> newImgUrl = new List<string>();
     private string addNewImgUrl;
     private bool showPopup = false;
+    private bool showStatusPopup = false;
+    public required int StatusValue { get; set; } = 2;
 
 
     protected override async Task OnInitializedAsync()
@@ -157,6 +180,30 @@
     {
         navMan.NavigateTo("/SalesObject/ListAllSalesObjects");
     }
+    public void UpdateStatus(int value)
+    {
+
+        if (value == 0)
+        {
+            saleObject.IsActive = false;
+        }
+        else if (value == 1)
+        {
+            saleObject.IsActive = true;
+        }
+        // var value = Convert.ToInt32(e.Value);
+        // switch (value)
+        // {
+        //     case 0:
+        //         CurrentRealEstateAgent.IsActive = false;
+        //         break;
+        //     case 1:
+        //         CurrentRealEstateAgent.IsActive = true;
+        //         break;
+        // }
+
+    }
+
 }
 <style>
     .saleObjectImage {
