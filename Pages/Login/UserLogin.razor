@@ -1,0 +1,56 @@
+﻿@page "/Login/UserLogin"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+@inject IJSRuntime JSRuntime
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card" style="height:auto; padding-left:50px; padding-right:50px; padding-top:20px; padding-bottom:20px; ">
+                <h3>Logga in</h3>
+                <form @onsubmit="LoginAsync">
+                    <div>
+                        <label for="email">E-post:</label>
+                        <input type="text" class="form-control mb-3" id="email" @bind="NewLogin.Email" />
+                    </div>
+                    <div>
+                        <label for="password">Lösenord:</label>
+                        <input type="text" class="form-control mb-3" id="password" @bind="NewLogin.Password" />
+                    </div>
+                    <div>
+                        <p>Har du inget konto? Registrera dig <NavLink href="RealEstateAgent/AddRealEstateAgent">här</NavLink></p>
+                        <button class="btn btn-success" type="submit">Logga in</button>
+                        <button class="btn btn-danger" @onclick="BackButton">Avbryt</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    public LoginModel NewLogin { get; set; } = new LoginModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    //metod för login
+    public async Task LoginAsync()
+    {
+
+    }
+
+    public async Task BackButton()
+    {
+        await JSRuntime.InvokeVoidAsync("history.back");
+    }
+
+
+}
