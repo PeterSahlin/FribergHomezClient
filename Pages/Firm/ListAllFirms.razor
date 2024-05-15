@@ -2,9 +2,13 @@
 @using FribergHomezClient.Models
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services
 @inject HttpClient httpClient
 @inject NavigationManager navMan
 @inject IJSRuntime JSRuntime
+@inject IFirmService firmService
+
+
 
 <script>
     window.confirmDelete = function () {
@@ -42,6 +46,8 @@
                     {
                         @if (item.IsActive)
                         {
+                            <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                                <Authorized>
                             <tr>
                                 <td>@item.Name</td>
                                 <td style="max-width: 700px;">@item.Presentation</td>
@@ -55,6 +61,8 @@
                                     <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteFirm(item.Id))">Ta bort</button>
                                 </td>
                             </tr>
+                                </Authorized>
+                            </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                         }
                     }
                 </tbody>
@@ -64,15 +72,25 @@
 </div>
 
 @code {
-    public List<Firm>? Firms;
+    public List<Firm> Firms { get; set; } = new List<Firm>();
 
+    Services.Base.BaseHttpService baseHttpService;
     protected override async Task OnInitializedAsync()
     {
+        // var response = await firmService.GetFirms();
+        await baseHttpService.GetBearerToken();
         var response = await httpClient.GetAsync("/api/firm");
         if (response.IsSuccessStatusCode)
         {
             Firms = await response.Content.ReadFromJsonAsync<List<Firm>>();
         }
+
+
+
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     Firms = await response.Content.ReadFromJsonAsync<List<Firm>>();
+        // }
     }
     private async Task NavigateToAddNewFirmPage()
     {
