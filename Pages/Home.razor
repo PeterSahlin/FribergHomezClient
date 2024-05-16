@@ -1,19 +1,89 @@
 ﻿@page "/"
+@using FribergHomezClient.Models
+@using System.Net.Http.Json
+@using System.Text.Json
+@inject HttpClient httpClient
+@inject NavigationManager navMan
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Home</PageTitle>
 
-<h1>Welcome</h1>
 
-<div>
-    <h3>Välkommen</h3>
-    <br />
-    <br />
+<div class="container justify-content-center">
+<h1 class="display-4 mb-4 mt-4">Välkommen till Friberg Homez</h1>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var item in FilteredObjects)
+    {
+        if (item.IsActive == true)
+        {
+            <div class="col">
+                <div class="card" style="width:25rem;">
+                    <a href="/SalesObject/SalesObjectDetails/@item.Id">
+                        <div id="carouselExampleControls_@item.Id" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach (var image in item.ImageUrl)
+                                {
+                                    <div class="carousel-item @(image == item.ImageUrl.First() ? "active" : "")">
+                                        <img src="@image" class="d-block w-100" alt="..." />
+                                    </div>
+                                }
+                            </div>
+                                                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                    </button>
+                        </div>
 
-    <p>Vad ska vi ha här?</p>
-
-
-
-
+                        <div class="card-body">
+                            <h5 class="card-title">@item.Address</h5>
+                            <p class="card-text">Utgångspris: @item.StartingPrice.ToString("N0") kr</p>
+                            <p class="card-text">Rum: @item.NumberOfRooms</p>
+                            <p class="card-text">Boarea: @item.LivingArea m²</p>
+                            <!-- Add other details as needed -->
+                        </div>
+                    </a>
+                
+                </div>
+            </div>
+        }
+    }
 </div>
+</div>
+
+@code
+{
+
+
+    public List<SaleObject> SalesObjectsList { get; set; } = new List<SaleObject>();
+    public List<SaleObject> FilteredObjects { get; set; } = new List<SaleObject>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await httpClient.GetAsync("/api/salesobject");
+        if (response.IsSuccessStatusCode)
+        {
+            SalesObjectsList = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
+
+        }
+
+        FilteredObjects = SalesObjectsList
+
+           .Where(so => so.IsActive)
+
+           .OrderBy(so => Guid.NewGuid()) // Randomize the list
+
+           .Take(3) // Take the first 3 random items
+
+           .ToList();
+    }
+
+
+
+
+}
 
 

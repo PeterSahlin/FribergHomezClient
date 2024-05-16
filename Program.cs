@@ -1,9 +1,8 @@
 using Blazored.LocalStorage;
 using FribergHomezClient.Providers;
-using FribergHomezClient.Services;
 using FribergHomezClient.Services.Authentication;
 using FribergHomezClient.Services.Base;
-using FribergHomezClient.Services.ModelServices;
+using FribergHomezClient.Services.ModelService;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
