@@ -1,4 +1,12 @@
-﻿<base href="/"/>
+﻿@using FribergHomezClient.Services.Authentication
+@using Microsoft.AspNetCore.Components.Authorization
+@using FribergHomezClient.Services
+@inject IAuthenticationService AuthenticationService
+
+@* @inject AuthenticationState authenticationState
+@inject IAuthenticationService authenticationService *@
+
+<base href="/" />
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">FribergHomezClient</a>
@@ -17,6 +25,8 @@
                         <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Alla försäljningsobjekt
                     </NavLink>
                 </li>
+                <AuthorizeView>
+                    <Authorized>
                 <li class="nav-item">
                     <NavLink class="nav-link" href="SalesObject/REAgentSalesObjects">
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Mina försäljningsobjekt
@@ -42,11 +52,21 @@
                         <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Alla mäklare
                     </NavLink>
                 </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="Login/UserLogin">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logga in
-                    </NavLink>
-                </li>
+
+                        <li class="nav-item" style="cursor:pointer;">
+                            <NavLink class="nav-link" @onclick="Logout">
+                                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logga ut
+                            </NavLink>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Login/UserLogin">
+                                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logga in
+                            </NavLink>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
             </ul>
         </div>
     </div>
@@ -54,8 +74,14 @@
 
 @code {
     private bool collapseNavMenu = true;
-
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    
+
+    private async Task Logout()
+    {
+        await AuthenticationService.Logout();
+    }
 
     private void ToggleNavMenu()
     {

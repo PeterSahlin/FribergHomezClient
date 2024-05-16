@@ -38,6 +38,10 @@ namespace FribergHomezClient.Services.Base
             {
                 client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
             }
+            else
+            {
+                client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+            }
         }
     }
 }
