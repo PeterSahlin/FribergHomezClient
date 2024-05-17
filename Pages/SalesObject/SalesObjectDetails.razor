@@ -1,9 +1,12 @@
 ﻿@page "/SalesObject/SalesObjectDetails/{Id:int}"
-@using FribergHomezClient.Models
+@* @using FribergHomezClient.Models *@
+@using FribergHomezClient.Services.Base
 @inject NavigationManager navMan
 @using System.Net.Http.Json
 @inject HttpClient httpClient
 @using System.Text.Json
+@using FribergHomezClient.Services.ModelService
+@inject ISaleObjectService saleObjectService
 
 <div class="container">
     <h3 class="mt-3">@saleObject.Address</h3>
@@ -34,7 +37,6 @@
             <div class="col-md-6">
                 <div class="card mt-3">
                     <div class="card-body">
-@*                         <p class="card-text"><strong>Adress:</strong> @saleObject.Address</p> *@
                         <p><strong>Kommun:</strong> @saleObject.Municipality?.Name</p>
                         <p><strong>Kategori:</strong> @saleObject.Category?.Name</p>
                         <p><strong>Utgångspris:</strong> @saleObject.StartingPrice.ToString("N0") kr</p>
@@ -45,7 +47,7 @@
                         <p><strong>Biarea:</strong> @saleObject.AncillaryArea m²</p>
                         <p><strong>Driftkostnad per år:</strong> @saleObject.OperatingCostPerYear.ToString("N0") kr</p>
                         <p><strong>Beskrivning:</strong> @saleObject.Description</p>
-                        <p><strong>Mäklare:</strong> @saleObject.RealEstateAgent?.FullName <img src="@saleObject.RealEstateAgent?.ImageUrl" style="max-width: 300px; height: 200px; margin-left: 30px; border-radius: 10px;"/></p>
+                        <p><strong>Mäklare:</strong> @saleObject.RealEstateAgent?.FirstName @saleObject.RealEstateAgent.LastName <img src="@saleObject.RealEstateAgent?.ImageUrl" style="max-width: 300px; height: 200px; margin-left: 30px; border-radius: 10px;"/></p>
                     </div>
                 </div>
             </div>
@@ -64,10 +66,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var saleObjectResponse = await httpClient.GetAsync($"/api/SalesObject/{Id}");
-        if (saleObjectResponse.IsSuccessStatusCode)
+        Response<SaleObject> saleObjectResponse = await saleObjectService.GetSaleObjectByIdAsync(Id);
+        if (saleObjectResponse.Success)
         {
-            saleObject = await saleObjectResponse.Content.ReadFromJsonAsync<SaleObject>();
+            saleObject = saleObjectResponse.Data;
         }
     }
     private void ReturnToPreviousPage()
