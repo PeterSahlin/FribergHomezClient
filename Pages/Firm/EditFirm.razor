@@ -1,9 +1,11 @@
 ﻿@page "/Firm/EditFirm/{Id:int}"
-@using FribergHomezClient.Models
+@using FribergHomezClient.Services.Base
 @inject NavigationManager navMan
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services.ModelService
 @inject HttpClient httpClient
+@inject IFirmService firmService
 
 @*Henrik*@
 <div class="container">
@@ -11,7 +13,7 @@
 
     @if (firm != null)
     {
-        <form @onsubmit="UpdateCategory">
+        <form @onsubmit="UpdateFirm">
             <div class="mb-3">
                 <input type="text" class="form-control" id="Name" placeholder="Namn" @bind="firm.Name" required style="max-width: 500px;"/>
             </div>
@@ -46,20 +48,13 @@
         }
     }
 
-    private async Task UpdateCategory()
+    private async Task UpdateFirm()
     {
         newFirm = firm;
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"/api/Firm/{newFirm.Id}", newFirm);
-            if (response.IsSuccessStatusCode)
-            {
-                navMan.NavigateTo("/Firm/ListAllFirms");
-            }
-            else
-            {
-                Console.WriteLine("Kunde inte uppdatera firman");
-            }
+            await firmService.UpdateFirmAsync(Id, newFirm);
+            navMan.NavigateTo("/Firm/ListAllFirms");
         }
         catch (Exception ex)
         {
