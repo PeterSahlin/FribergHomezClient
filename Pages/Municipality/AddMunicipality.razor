@@ -1,9 +1,12 @@
 ﻿@page "/Municipality/AddMunicipality"
-@using FribergHomezClient.Models
+@using FribergHomezClient.Services.Base
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services.ModelService
 @inject HttpClient httpClient
 @inject NavigationManager navMan
+@inject IMunicipalityService municipalityService
+@inject IJSRuntime JSRuntime
 
 
 <div class="container">
@@ -28,23 +31,8 @@
                 Name = newMunicipality
             };
 
-        try
-        {
-            var response = await httpClient.PostAsJsonAsync("/api/municipalities", municipality);
-            if (response.IsSuccessStatusCode)
-            {
-                navMan.NavigateTo("/Municipality/ListAllMunicipalities");
-
-            }
-            else
-            {
-                Console.WriteLine("Kunde inte lägga till kommun");
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
+        await municipalityService.CreateMunicipalityAsync(municipality);
+        navMan.NavigateTo("/Municipality/ListAllMunicipalities");
     }
     private void ReturnToPreviousPage()
     {

@@ -1,11 +1,15 @@
 ﻿@page "/Category/ListAllCategories"
-
-@using FribergHomezClient.Models
+@* @using FribergHomezClient.Models *@
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services.ModelService
+@using FribergHomezClient.Services.Base
+@using Microsoft.AspNetCore.Components.Authorization
+
 @inject HttpClient httpClient
 @inject NavigationManager navMan
 @inject IJSRuntime JSRuntime
+@inject ICategoryService categoryService
 
 <script>
     window.confirmDelete = function () {
@@ -56,11 +60,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync("/api/category");
-        if(response.IsSuccessStatusCode)
-        {
-            CategoryList = await response.Content.ReadFromJsonAsync<List<Category>>();
-        }
+        Response<List<Category>> response = await categoryService.GetCategoriesAsync();
+
+        CategoryList = response.Data;
 
     }
     private void NavigateToAddCategoryPage()

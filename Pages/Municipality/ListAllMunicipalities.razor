@@ -1,9 +1,14 @@
 ﻿@page "/Municipality/ListAllMunicipalities"
-@using FribergHomezClient.Models
+@* @using FribergHomezClient.Models *@
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services.ModelService
+@using FribergHomezClient.Services.Base
+@using Microsoft.AspNetCore.Components.Authorization
 @inject HttpClient httpClient
 @inject NavigationManager navMan
+@inject IJSRuntime JSRuntime
+@inject IMunicipalityService municipalityService
 
 <PageTitle>Kommuner</PageTitle>
 
@@ -56,13 +61,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync("/api/municipalities");
-        if (response.IsSuccessStatusCode)
-        {
-            Municipalities = await response.Content.ReadFromJsonAsync<List<Municipality>>();
-            FilteredMunicipalities = Municipalities;
-        }
+        Response<List<Municipality>> response = await municipalityService.GetMunicipalitiesAsync();
 
+        Municipalities = response.Data;
+
+        FilteredMunicipalities = new List<Municipality>(Municipalities);
     }
 
     public async Task SearchAsync()

@@ -1,14 +1,16 @@
 ﻿@page "/Category/EditCategory/{Id:int}"
-@using FribergHomezClient.Models
+@using FribergHomezClient.Services.Base
 @inject NavigationManager navMan
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services.ModelService
 @inject HttpClient httpClient
-@inject NavigationManager navMan
+@inject ICategoryService categoryService
+@inject IJSRuntime JSRuntime
 
 @*Henrik*@
 <div class="container">
-    <h3 class="mb-4">Redigera Kategori</h3>
+    <h3 class="mb-4">Redigera kategori</h3>
 
     @if (category != null)
     {
@@ -34,10 +36,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var categoryResponse = await httpClient.GetAsync($"/api/Category/{Id}");
-        if (categoryResponse.IsSuccessStatusCode)
+        Response<Category> response = await categoryService.GetCategoryByIdAsync(Id);
+        if (response.Success)
         {
-            category = await categoryResponse.Content.ReadFromJsonAsync<Category>();
+            category = response.Data;
         }
     }
 
@@ -46,24 +48,18 @@
         newCategory = category;
         try
         {
-            var response = await httpClient.PutAsJsonAsync($"/api/Category/{newCategory.Id}", newCategory);
-            if (response.IsSuccessStatusCode)
-            {
-                navMan.NavigateTo("/Category/ListAllCategories");
-            }
-            else
-            {
-                Console.WriteLine("Kunde inte uppdatera kategori");
-            }
+
+            await categoryService.UpdateCategoryAsync(newCategory.Id.ToString(),newCategory);
+            navMan.NavigateTo("/Category/ListAllCategories");
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
         }
     }
-    private void ReturnToPreviousPage()
+    private async Task ReturnToPreviousPage()
     {
-        navMan.NavigateTo("/Category/ListAllCategories");
+        await JSRuntime.InvokeVoidAsync("history.back");
     }
 
 }
