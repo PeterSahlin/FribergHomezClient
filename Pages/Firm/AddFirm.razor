@@ -48,7 +48,7 @@
                 IsActive = true
             };
     
-        /* var response =  */await firmService.CreateFirmAsync(NewFirm);
+        await firmService.CreateFirmAsync(NewFirm);
         navMan.NavigateTo("/Firm/ListAllFirms");
 
         

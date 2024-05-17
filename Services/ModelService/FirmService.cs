@@ -57,13 +57,12 @@ namespace FribergHomezClient.Services.ModelService
             return response;
         }
 
-        //create
+        //create firm
         public async Task CreateFirmAsync (Firm firm)
         {
             try
 
             {
-
                 await GetBearerToken();
 
                 await client.FirmPOSTAsync(firm);
@@ -94,30 +93,45 @@ namespace FribergHomezClient.Services.ModelService
 
 
 
-            //Response<Firm> response;
-            //await GetBearerToken();
-            //    await client.FirmPOSTAsync(firm);
-            ////try
-            ////{
-            //    response = new Response<Firm>
-            //    {                  
-            //        Success = true
-            //    };
-            //}
-            //catch (ApiException e)
-            //{
-            //    response = ConvertApiExceptions<Firm>(e);
-            //}
-            //return response;
         }
 
 
 
-        ////update
-        //public async Task<Response<Firm>> UpdateFirmAsync(Firm firm)
-        //{
+        //updatefirm
+        public async Task UpdateFirmAsync(int id, Firm firm)
+        {
+            try
 
-        //}
+            {
+                await GetBearerToken();
+
+                await client.FirmPUTAsync(id, firm);
+
+            }
+
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+
+            {
+
+                // Handle the 404 error here
+
+                Console.WriteLine("404 error occurred");
+
+                // You can also return a custom error response or throw a custom exception
+
+            }
+
+            catch (Exception ex)
+
+            {
+
+                // Handle other exceptions
+
+                Console.WriteLine("An error occurred: " + ex.Message);
+
+            }
+
+        }
 
         //delete
         public async Task<Response<Firm>> DeleteFirmAsync(int firmId)
