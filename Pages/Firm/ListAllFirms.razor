@@ -106,11 +106,11 @@
 
     private async Task NavigateToDeleteFirm(int id)
     {
-        // firmService.DeleteFirmAsync()
+        
+        if (await JSRuntime.InvokeAsync<bool>("confirmDelete"))
+        {
             await firmService.DeleteFirmAsync(id);
-        // if (await JSRuntime.InvokeAsync<bool>("confirmDelete"))
-        // {
-        //     // await OnInitializedAsync();
-        // }
+            await OnInitializedAsync();
+        }
     }
 }

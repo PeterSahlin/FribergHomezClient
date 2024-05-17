@@ -1,5 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using FribergHomezClient.Services.Base;
+using System.Net;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FribergHomezClient.Services.ModelService
@@ -59,9 +60,43 @@ namespace FribergHomezClient.Services.ModelService
         //create
         public async Task CreateFirmAsync (Firm firm)
         {
-            //Response<Firm> response;
+            try
+
+            {
+
                 await GetBearerToken();
+
                 await client.FirmPOSTAsync(firm);
+
+            }
+
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+
+            {
+
+                // Handle the 404 error here
+
+                Console.WriteLine("404 error occurred");
+
+                // You can also return a custom error response or throw a custom exception
+
+            }
+
+            catch (Exception ex)
+
+            {
+
+                // Handle other exceptions
+
+                Console.WriteLine("An error occurred: " + ex.Message);
+
+            }
+
+
+
+            //Response<Firm> response;
+            //await GetBearerToken();
+            //    await client.FirmPOSTAsync(firm);
             ////try
             ////{
             //    response = new Response<Firm>
