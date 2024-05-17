@@ -1,10 +1,19 @@
 ﻿@page "/SalesObject/REAgentSalesObjects"
-@using FribergHomezClient.Models
+@* @using FribergHomezClient.Models *@
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Providers
+@using FribergHomezClient.Services.Base
+@using Microsoft.AspNetCore.Components.Authorization
 @inject HttpClient httpClient
 @inject NavigationManager navMan
 @inject IJSRuntime JSRuntime
+@inject ApiAuthenticationStateProvider provider
+@using System.Security.Claims
+@inject ISaleObjectService saleObjectService
+@using FribergHomezClient.Services.ModelService
+@inject ILocalStorageService localStorage
+@using Blazored.LocalStorage
 
 <script>
     window.confirmDelete = function () {
@@ -13,13 +22,14 @@
 </script>
 
 <h3 class="mb-4">Mina försäljningsobjekt</h3>
-@if (MySalesObjectList != null)
+
+@if (CurrentUser != null)
 {
-    <p class="mb-4">Inloggad mäklare: @MySalesObjectList.FirstOrDefault(r => r.RealEstateAgentId == LoggedInAgent).RealEstateAgent.FullName</p>
-}
-else
-{
-    <p class="text-danger mb-4">Kunde inte ladda försäljningsobjekt.</p>
+
+    @if (MySalesObjectList != null)
+    {
+        <p class="mb-4">Inloggad mäklare: @MySalesObjectList.FirstOrDefault()?.RealEstateAgent.FirstName @MySalesObjectList.FirstOrDefault().RealEstateAgent.LastName</p>
+    }
 }
 <div>
     <button class="btn btn-primary" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
@@ -27,7 +37,7 @@ else
 
 @if (MySalesObjectList == null)
 {
-    <p class="text-danger mb-4">Kunde inte ladda försäljningsobjekt.</p>
+    <p class="text-danger mb-4">Inga försäljningsobject för inloggad mäklare.</p>
 }
 else
 {
@@ -41,6 +51,8 @@ else
                     <th>Utgångspris</th>
                     <th>Kategori</th>
                     <th>Kommun</th>
+                    <th>Redigera</th>
+                    <th>Ta bort</th>
                 </tr>
             </thead>
             <tbody>
@@ -74,25 +86,29 @@ else
 @code
 {
     //properties
-    public string LoggedInAgent { get; set; }
+
     public List<SaleObject>? AllSalesObjectList { get; set; }
     public List<SaleObject>? MySalesObjectList { get; set; }
+    public RealEstateAgent agent;
+    private string CurrentUser;
 
     //methods
     protected override async Task OnInitializedAsync()
     {
-        LoggedInAgent = "03a98726-8e27-453f-9805-d8293c94da53"; //Sätt till inloggad user efter identity
-        var response = await httpClient.GetAsync("/api/salesobject");
-        if (response == null)
+        CurrentUser = await localStorage.GetItemAsync<string>("userId");
+        Response<List<SaleObject>> response = await saleObjectService.GetSaleObjectAsync();
+        if (response.Success)
         {
-
+            AllSalesObjectList = response.Data;
+            MySalesObjectList = AllSalesObjectList.Where(h => h.RealEstateAgentId.ToString() == CurrentUser).ToList();
         }
-        if (response.IsSuccessStatusCode)
+        else
         {
-            AllSalesObjectList = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
-            MySalesObjectList = AllSalesObjectList.Where(o => o.RealEstateAgentId == LoggedInAgent).ToList();
+            Console.WriteLine("User not authenticated.");
         }
     }
+
+
     private void NavigateToEditSalesObject(int id)
     {
         string previousPageUrl = "/SalesObject/REAgentSalesObjects";
@@ -110,15 +126,8 @@ else
     {
         navMan.NavigateTo("/SalesObject/AddSalesObject");
     }
-
-    /*
-    * variabel för att ta emot respons från API
-    *variabel för att lagra vilken mäklare som är inloggad.
-    * Lista av saleobjects som har realestateagentid == inloggadmäklare
-    * Visa saleobjects med inloggadmäklares id.
-    *
-    *
-    *
-    *
-    * */
+    public static class CustomClaimTypes
+    {
+        public const string RealEstateAgentId = "RealEstateAgentId";
+    }
 }
