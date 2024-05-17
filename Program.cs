@@ -31,6 +31,9 @@ namespace FribergHomezClient
             builder.Services.AddScoped<IFirmService, FirmService>();
             builder.Services.AddScoped<IMunicipalityService, MunicipalityService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ISaleObjectService, SaleObjectService>();
+
+
 
 
 
