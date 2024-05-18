@@ -1,10 +1,13 @@
 ﻿@page "/RealEstateAgent/AddRealEstateAgent"
-@using FribergHomezClient.Models
+@using FribergHomezClient.Services.Base
+@using FribergHomezClient.Services.ModelService
 @using System.Net.Http.Json
 @using System.Text.Json
 @inject HttpClient httpClient
 @inject NavigationManager navMan
 @inject IJSRuntime JSRuntime
+@inject IRealEstateAgentService realEstateAgentService
+@inject IFirmService firmService
 
 @*Peter*@
 
@@ -62,7 +65,7 @@
                         </div>
                     </div>
                     @* <button @onclick="AddRealEstateAgentAsync">Spara</button> *@
-                    <button class="btn btn-success" type="submit">Logga in</button>
+                    <button class="btn btn-success" type="submit">Spara</button>
                     <button class="btn btn-danger" @onclick="BackButton">Avbryt</button>
                 </form>
             </div>
@@ -85,11 +88,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync("api/Firm");
+        // var response = await httpClient.GetAsync("api/Firm");
+        var response = await firmService.GetFirmsAsync();
 
-        if (response.IsSuccessStatusCode)
+        if (response.Success)
         {
-            FirmList = await response.Content.ReadFromJsonAsync<List<Firm>>();
+            FirmList = response.Data.Where(s => s.IsActive == true).ToList();
         }
     }
 
@@ -100,28 +104,25 @@
         var agentToAdd = NewRealEstateAgent;
         if (agentToAdd.FirmId != null)
         {
-            var agentFirmResponse = await httpClient.GetAsync($"/api/Firm/{agentToAdd.FirmId}");
-            if (agentFirmResponse.IsSuccessStatusCode)
+            // var agentFirmResponse = await httpClient.GetAsync($"/api/Firm/{agentToAdd.FirmId}");
+            var agentFirmResponse = await firmService.GetFirmByIdAsync(Convert.ToInt32(agentToAdd.FirmId));
+            if (agentFirmResponse.Success)
             {
-                agentToAdd.Firm = await agentFirmResponse.Content.ReadFromJsonAsync<Firm>();
+                agentToAdd.Firm = agentFirmResponse.Data;
 
             }
         }
 
         try
         {
-            var addNewAgentResponse = await httpClient.PostAsJsonAsync("/api/RealEstateAgent", agentToAdd);
-            if (addNewAgentResponse.IsSuccessStatusCode)
-            {
-                navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
-
-            }
+            // var addNewAgentResponse = await httpClient.PostAsJsonAsync("/api/RealEstateAgent", agentToAdd);
+            await realEstateAgentService.CreateAgentAsync(agentToAdd);
+            navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
 
         }
         catch (Exception ex)
         {
-
-
+            Console.WriteLine(ex.Message);
         }
 
     }

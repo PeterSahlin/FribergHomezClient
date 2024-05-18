@@ -6,6 +6,8 @@
 @using FribergHomezClient.Services.ModelService
 @inject HttpClient httpClient
 @inject ISaleObjectService saleObjectService
+@inject ICategoryService categoryService
+@inject IMunicipalityService municipalityService
 
 <h3>Redigera försäljningsobjekt</h3>
 @if (saleObject != null)
@@ -145,15 +147,17 @@
                 };
         }
 
-        var categoryResponse = await httpClient.GetAsync("/api/Category");
-        if (categoryResponse.IsSuccessStatusCode)
+        //var categoryResponse = await httpClient.GetAsync("/api/Category");
+        var categoryResponse = await categoryService.GetCategoriesAsync();
+        if (categoryResponse.Success)
         {
-            Categories = await categoryResponse.Content.ReadFromJsonAsync<List<Category>>();
+            Categories = categoryResponse.Data;
         }
-        var municipalityResponse = await httpClient.GetAsync("/api/municipalities");
-        if (municipalityResponse.IsSuccessStatusCode)
+        // var municipalityResponse = await httpClient.GetAsync("/api/municipalities");
+        var municipalityResponse = await municipalityService.GetMunicipalitiesAsync();
+        if (municipalityResponse.Success)
         {
-            Municipalities = await municipalityResponse.Content.ReadFromJsonAsync<List<Municipality>>();
+            Municipalities = municipalityResponse.Data;
         }
         var agentResponse = await httpClient.GetAsync("/api/RealEstateAgent");
         if (agentResponse.IsSuccessStatusCode)

@@ -1,25 +1,26 @@
-﻿using FribergHomezClient.Services.Base;
-using Blazored.LocalStorage;
+﻿using Blazored.LocalStorage;
+using FribergHomezClient.Services.Base;
 using System.Net;
 
 namespace FribergHomezClient.Services.ModelService
 {
-    public class SaleObjectService : BaseHttpService, ISaleObjectService
+    public class RealEstateAgentService : BaseHttpService, IRealEstateAgentService
     {
         private readonly IClient client;
-        public SaleObjectService(ILocalStorageService localStorage, IClient client) : base(localStorage, client)
+        public RealEstateAgentService(ILocalStorageService localStorage, IClient client) : base(localStorage, client)
         {
             this.client = client;
         }
-        public async Task<Response<List<SaleObject>>> GetSaleObjectAsync()
+
+        public async Task<Response<List<RealEstateAgent>>> GetAgentsAsync()
         {
-            Response<List<SaleObject>> response;
+            Response<List<RealEstateAgent>> response;
 
             try
             {
                 await GetBearerToken();
-                var data = await client.SalesObjectAllAsync();
-                response = new Response<List<SaleObject>>
+                var data = await client.RealEstateAgentAllAsync();
+                response = new Response<List<RealEstateAgent>>
                 {
                     Data = data.ToList(),
                     Success = true
@@ -27,20 +28,20 @@ namespace FribergHomezClient.Services.ModelService
             }
             catch (ApiException e)
             {
-                response = ConvertApiExceptions<List<SaleObject>>(e);
+                response = ConvertApiExceptions<List<RealEstateAgent>>(e);
             }
             return response;
         }
 
-        public async Task<Response<SaleObject>> GetSaleObjectByIdAsync(int id)
+        public async Task<Response<RealEstateAgent>> GetAgentByIdAsync(string id)
         {
-            Response<SaleObject> response;
+            Response<RealEstateAgent> response;
 
             try
             {
                 await GetBearerToken();
-                var data = await client.SalesObjectGETAsync(id);
-                response = new Response<SaleObject>
+                var data = await client.RealEstateAgentGETAsync(id);
+                response = new Response<RealEstateAgent>
                 {
                     Data = data,
                     Success = true
@@ -48,17 +49,17 @@ namespace FribergHomezClient.Services.ModelService
             }
             catch (ApiException e)
             {
-                response = ConvertApiExceptions<SaleObject>(e);
+                response = ConvertApiExceptions<RealEstateAgent>(e);
             }
             return response;
         }
 
-        public async Task CreateSaleObjectAsync(SalesObjectDto saleObject)
+        public async Task CreateAgentAsync(AgentDto agent)
         {
             try
             {
                 await GetBearerToken();
-                await client.SalesObjectPOSTAsync(saleObject);
+                await client.RealEstateAgentPOSTAsync(agent);
             }
             catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
@@ -70,31 +71,31 @@ namespace FribergHomezClient.Services.ModelService
             }
         }
 
-        public async Task<Response<SaleObject>> DeleteSaleObjectAsync(int Id)
+        public async Task<Response<RealEstateAgent>> DeleteAgentAsync(string Id)
         {
-            Response<SaleObject> response;
+            Response<RealEstateAgent> response;
             await GetBearerToken();
             try
             {
-                await client.SalesObjectDELETEAsync(Id);
-                response = new Response<SaleObject>
+                await client.RealEstateAgentDELETEAsync(Id);
+                response = new Response<RealEstateAgent>
                 {
                     Success = true
                 };
             }
             catch (ApiException e)
             {
-                response = ConvertApiExceptions<SaleObject>(e);
+                response = ConvertApiExceptions<RealEstateAgent>(e);
             }
             return response;
         }
 
-        public async Task UpdateSaleObjectAsync(SalesObjectDto saleObject)
+        public async Task UpdateAgentAsync(RealEstateAgent agent)
         {
             try
             {
                 await GetBearerToken();
-                await client.SalesObjectPUTAsync(saleObject);
+                await client.RealEstateAgentPUTAsync(agent);
             }
             catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {

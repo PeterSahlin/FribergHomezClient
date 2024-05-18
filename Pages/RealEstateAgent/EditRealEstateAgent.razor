@@ -1,22 +1,25 @@
 ﻿@page "/RealEstateAgent/EditRealEstateAgent/{Id:guid}"
-@using FribergHomezClient.Models
+@using FribergHomezClient.Services.Base
+@using FribergHomezClient.Services.ModelService
 @using System.Net.Http.Json
 @using System.Text.Json
 @inject HttpClient httpClient
 @inject NavigationManager navMan
+@inject IRealEstateAgentService realEstateAgentService
+@inject IFirmService firmService
 
 @*Peter*@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <br />
-            <h3>Redigera @CurrentRealEstateAgent.FullName</h3>
+            <h3>Redigera @CurrentRealEstateAgent.FirstName @CurrentRealEstateAgent.LastName</h3>
 
             <div class="card" style="height:auto; padding-left:50px; padding-right:50px; padding-top:20px; padding-bottom:20px; ">
                 <div style="display: flex; justify-content: center; align-items: center;">
-                    <img src="@CurrentRealEstateAgent.ImageUrl" class="card-img" alt="@CurrentRealEstateAgent.FullName" style="width:220px;" />
+                    <img src="@CurrentRealEstateAgent.ImageUrl" class="card-img" alt="@CurrentRealEstateAgent.FirstName @CurrentRealEstateAgent.LastName" style="width:220px;" />
                 </div>
-                <form @onsubmit="@(e => {UpdateStatus(StatusValue); EditRealEstateAgentAsync();  })">
+                <form @onsubmit="@(async e =>{await UpdateStatus(StatusValue); await EditRealEstateAgentAsync();  })">
                     <div>
 
                         <input type="text" id="firstname" class="form-control mb-3 mt-3" placeholder="Förnamn" @bind="@CurrentRealEstateAgent.FirstName" />
@@ -133,19 +136,20 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var agentResponse = await httpClient.GetAsync($"api/RealEstateAgent/{Id}");
-        if (agentResponse.IsSuccessStatusCode)
+        // var agentResponse = await httpClient.GetAsync($"api/RealEstateAgent/{Id}");
+        var agentResponse = await realEstateAgentService.GetAgentByIdAsync(Id.ToString());
+        if (agentResponse.Success)
         {
-            CurrentRealEstateAgent = await agentResponse.Content.ReadFromJsonAsync<RealEstateAgent>();
+            CurrentRealEstateAgent = agentResponse.Data;
         }
 
-        var firmResponse = await httpClient.GetAsync("api/Firm");
-        if (firmResponse.IsSuccessStatusCode)
+        // var firmResponse = await httpClient.GetAsync("api/Firm");
+        var firmResponse = await firmService.GetFirmsAsync();
+        if (firmResponse.Success)
         {
-            FirmList = await firmResponse.Content.ReadFromJsonAsync<List<Firm>>();
+            FirmList = firmResponse.Data.Where(s => s.IsActive == true).ToList();
         }
     }
-
 
     public async Task EditRealEstateAgentAsync()
     {
@@ -161,15 +165,9 @@
         UpdatedRealEstateAgent = CurrentRealEstateAgent;
         try
         {
-            var updateAgentResponse = await httpClient.PutAsJsonAsync("/api/RealEstateAgent/", UpdatedRealEstateAgent);
-            if (updateAgentResponse.IsSuccessStatusCode)
-            {
-                navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
-            }
-            else
-            {
-                Console.WriteLine("Kunde inte uppdatera mäklare.");
-            }
+            // var updateAgentResponse = await httpClient.PutAsJsonAsync("/api/RealEstateAgent/", UpdatedRealEstateAgent);
+            await realEstateAgentService.UpdateAgentAsync(UpdatedRealEstateAgent);
+            navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
         }
         catch (Exception ex)
         {
@@ -178,7 +176,7 @@
         }
     }
 
-    public void UpdateStatus(int value)
+    public async Task UpdateStatus(int value)
     {
 
         if (value == 0)

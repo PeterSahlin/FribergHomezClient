@@ -62,7 +62,7 @@
 @code {
     [Parameter]
     public int Id { get; set; }
-    public SaleObject saleObject;
+    public SaleObject saleObject = new SaleObject();
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,11 +1,13 @@
 ﻿@page "/RealEstateAgent/ListAllRealEstateAgents"
 @using FribergHomezClient.Components
-@using FribergHomezClient.Models
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services.ModelService
+@using FribergHomezClient.Services.Base
 @inject IJSRuntime JSRuntime
 @inject HttpClient httpClient
 @inject NavigationManager navMan
+@inject IRealEstateAgentService realEstateAgentService
 
 <script>
     window.confirmDelete = function () {
@@ -52,11 +54,11 @@ else
                     <div class="card" style="height:320px; ">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img src="@item.ImageUrl" class="card-img" alt="@item.FullName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
+                                <img src="@item.ImageUrl" class="card-img" alt="@item.FirstName @item.LastName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h5 class="card-title">@item.FullName</h5>
+                                    <h5 class="card-title">@item.FirstName @item.LastName</h5>
                                     <p class="card-text"><b>E-post:</b> @item.Email</p>
                                     <p class="card-text"><b>Telefonnummer:</b> @item.PhoneNumber</p>
                                     <p class="card-text"><b>Mäklarfirma:</b> @item.Firm.Name</p>
@@ -97,11 +99,11 @@ else
                     <div class="card" style="height:320px; ">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img src="@item.ImageUrl" class="card-img" alt="@item.FullName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
+                                <img src="@item.ImageUrl" class="card-img" alt="@item.FirstName @item.LastName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h5 class="card-title">@item.FullName</h5>
+                                    <h5 class="card-title">@item.FirstName @item.LastName</h5>
                                     <p class="card-text"><b>E-post: @item.Email</b></p>
                                     <p class="card-text"><b>Telefonnummer:</b> @item.PhoneNumber</p>
                                     <p class="card-text"><b>Mäklarfirma:</b> @item.Firm.Name</p>
@@ -139,11 +141,11 @@ else
                     <div class="card" style="height:320px; ">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img src="@item.ImageUrl" class="card-img" alt="@item.FullName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
+                                <img src="@item.ImageUrl" class="card-img" alt="@item.FirstName @item.LastName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h5 class="card-title">@item.FullName</h5>
+                                    <h5 class="card-title">@item.FirstName @item.LastName</h5>
                                     <p class="card-text"><b>E-post:</b> @item.Email</p>
                                     <p class="card-text"><b>Telefonnummer:</b> @item.PhoneNumber</p>
                                     <p class="card-text"><b>Mäklarfirma:</b> @item.Firm.Name</p>
@@ -188,11 +190,11 @@ else
                     <div class="card" style="height:320px; ">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img src="@item.ImageUrl" class="card-img" alt="@item.FullName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
+                                <img src="@item.ImageUrl" class="card-img" alt="@item.FirstName @item.LastName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h5 class="card-title">@item.FullName</h5>
+                                    <h5 class="card-title">@item.FirstName @item.LastName</h5>
                                     <p class="card-text"><b>E-post:</b> @item.Email</p>
                                     <p class="card-text"><b>Telefonnummer:</b> @item.PhoneNumber</p>
                                     <p class="card-text"><b>Mäklarfirma:</b> @item.Firm.Name</p>
@@ -236,10 +238,11 @@ else
     //METHODS
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync("api/RealEstateAgent");
-        if (response.IsSuccessStatusCode)
+        // var response = await httpClient.GetAsync("api/RealEstateAgent");
+        var response = await realEstateAgentService.GetAgentsAsync();
+        if (response.Success)
         {
-            AllAgentList = await response.Content.ReadFromJsonAsync<List<RealEstateAgent>>();
+            AllAgentList = response.Data;
         }
 
         ActiveAgentList = AllAgentList.Where(r => r.IsActive == true).ToList();
