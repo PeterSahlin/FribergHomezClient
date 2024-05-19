@@ -56,6 +56,8 @@
                             }
                         </select>
                     </div>
+                        <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
+                        <Authorized>
                     <div class="row mt-3 mb-3">
                         <div class="col-auto">
                             <input class="btn-check mb-3" type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
@@ -66,6 +68,8 @@
                             <label class="btn btn-outline-danger btn-sm" for="inactiveRadio">Inaktiv</label>
                         </div>
                     </div>
+                        </Authorized>
+                    </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                     @* <button @onclick="AddRealEstateAgentAsync">Spara</button> *@
 
                     <button class="btn btn-success" type="submit">Skapa mäklare</button>
@@ -95,7 +99,7 @@
 
         //Response<List<Firm>> response = await firmService.GetFirmsAsync();
 
-       
+
 
         // var response = await httpClient.GetAsync("api/Firm");
         var response = await firmService.GetFirmsAsync();
@@ -124,14 +128,14 @@
         }
 
 
-        
+
         try
         {
-        // var addNewAgentResponse = await httpClient.PostAsJsonAsync("/api/RealEstateAgent", agentToAdd);
-        await realEstateAgentService.CreateRealEstateAgentAsync(agentToAdd);
-        navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
+            // var addNewAgentResponse = await httpClient.PostAsJsonAsync("/api/RealEstateAgent", agentToAdd);
+            await realEstateAgentService.CreateRealEstateAgentAsync(agentToAdd);
+            navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
         }
-         catch (Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
@@ -142,7 +146,6 @@
     }
     public void UpdateStatus(int value)
     {
-
         if (value == 0)
         {
             NewRealEstateAgent.IsActive = false;
@@ -151,16 +154,6 @@
         {
             NewRealEstateAgent.IsActive = true;
         }
-        // var value = Convert.ToInt32(e.Value);
-        // switch (value)
-        // {
-        //     case 0:
-        //         CurrentRealEstateAgent.IsActive = false;
-        //         break;
-        //     case 1:
-        //         CurrentRealEstateAgent.IsActive = true;
-        //         break;
-        // }
 
     }
     public async Task BackButton()

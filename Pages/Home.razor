@@ -21,7 +21,7 @@
         {
             <div class="col">
                 <div class="card" style="width:25rem;">
-                    <a href="/SalesObject/SalesObjectDetails/@item.Id">
+                    <a style="text-decoration: none; color: midnightblue;" href="/SalesObject/SalesObjectDetails/@item.Id">
                         <div id="carouselExampleControls_@item.Id" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner">
                                 @foreach (var image in item.ImageUrl)
@@ -41,9 +41,9 @@
                     </button>
                         </div>
 
-                        <div class="card-body">
+                            <div class="card-body">
                             <h5 class="card-title">@item.Address</h5>
-                            <p class="card-text">Utgångspris: @item.StartingPrice.ToString("N0") kr</p>
+                                <p class="card-text">Utgångspris: @item.StartingPrice.ToString("N0") kr</p>
                             <p class="card-text">Rum: @item.NumberOfRooms</p>
                             <p class="card-text">Boarea: @item.LivingArea m²</p>
                             <!-- Add other details as needed -->

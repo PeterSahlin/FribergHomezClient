@@ -8,6 +8,7 @@
 @inject ISaleObjectService saleObjectService
 @inject ICategoryService categoryService
 @inject IMunicipalityService municipalityService
+@inject IJSRuntime JSRuntime
 
 <h3>Redigera försäljningsobjekt</h3>
 @if (saleObject != null)
@@ -76,6 +77,17 @@
             </div>
         }
     </div>
+        <div>
+
+            <select id="realEstateAgentDropDown" class="btn btn-secondary btn-sm dropdown-toggle mt-3 mb-3"
+                placeholder="Mäklare" @bind="saleObject.RealEstateAgentId">
+                <option>Välj mäklare</option>
+                @foreach (var agent in RealEstateAgents)
+                {
+                    <option value="@agent.Id">@agent.FirstName @agent.LastName</option>
+                }
+            </select>
+        </div>
 
     <div class="row mb-3">
         <div class="col-auto">
@@ -98,8 +110,8 @@
 
     <div class="row mb-3">
         <div class="col-md-6">
-            <button class="btn btn-success me-2" type="submit" @* @onclick="UpdateSaleObject *@">Spara</button>
-            <button class="btn btn-danger" @onclick="ReturnToListAll">Avbryt</button>
+            <button class="btn btn-success me-2" type="submit">Spara</button>
+            <button class="btn btn-danger" @onclick="BackButton">Avbryt</button>
         </div>
     </div>
     </form>
@@ -183,7 +195,7 @@
         try
         {
             await saleObjectService.UpdateSaleObjectAsync(newSaleObject);
-            navMan.NavigateTo("/SalesObject/ListAllSalesObjects");
+            await JSRuntime.InvokeVoidAsync("history.back");
         }
         catch (Exception ex)
         {
@@ -194,9 +206,9 @@
     {
         saleObject.ImageUrl.Remove(imageUrl);
     }
-    private void ReturnToListAll()
+    public async Task BackButton()
     {
-        navMan.NavigateTo("/SalesObject/ListAllSalesObjects");
+        await JSRuntime.InvokeVoidAsync("history.back");
     }
     public void UpdateStatus(int value)
     {
