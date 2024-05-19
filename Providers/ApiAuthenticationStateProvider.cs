@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using FribergHomezClient.Services.Base;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -48,6 +49,8 @@ namespace FribergHomezClient.Providers
         public async Task LoggedOut()
         {
             await localStorage.RemoveItemAsync("accessToken");
+            await localStorage.RemoveItemAsync("userId");
+            await localStorage.RemoveItemAsync("email");
             var identity = new ClaimsIdentity();
             var user = new ClaimsPrincipal(identity);
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));

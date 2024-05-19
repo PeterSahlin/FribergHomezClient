@@ -20,17 +20,12 @@ namespace FribergHomezClient.Services.Authentication
 
         public async Task<bool> AuthenticateAsync(LoginDTO loginModel)
         {
-
             var response = await httpClient.LoginAsync(loginModel);
-
-
             await localStorage.SetItemAsync("accessToken", response.Token);
+            await localStorage.SetItemAsync("userId", response.UserId);
+            await localStorage.SetItemAsync("email", response.Email);
             await ((ApiAuthenticationStateProvider)authenticationStateProvider).LoggedIn();
             return true;
-
-
-
-
         }
 
         public async Task Logout()

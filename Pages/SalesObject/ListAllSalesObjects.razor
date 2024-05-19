@@ -1,10 +1,13 @@
 ﻿@page "/SalesObject/ListAllSalesObjects"
-@using FribergHomezClient.Models
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services.Base
+@using FribergHomezClient.Services.ModelService
 @inject HttpClient httpClient
 @inject NavigationManager navMan
 @inject IJSRuntime JSRuntime
+@inject ISaleObjectService saleObjectService
+@inject IMunicipalityService municipalityService
 
 <script>
     window.confirmDelete = function () {
@@ -16,7 +19,11 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
+            <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                <Authorized>
             <button class="btn btn-primary" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
+                </Authorized>
+            </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
         </div>
         <div class="input-group" style="max-width: 400px;">
             <input class="form-control" placeholder="Sök..." @bind="searchItem" />
@@ -25,13 +32,27 @@
         </div>
         <div>
             <label for="municipalityDropdown" class="me-2">Välj kommun:</label>
-            <select class="form-select" id="municipalityDropdown" @onchange="HandleMunicipalityChangeDropDown">
+@*             <select class="form-select" id="municipalityDropdown" @onchange="HandleMunicipalityChangeDropDown">
                 <option value="0">Alla kommuner</option>
                 @foreach (var municipality in Municipalities)
                 {
                     <option value="@municipality.Id">@municipality.Name</option>
                 }
-            </select>
+            </select> *@
+            @if (Municipalities.Count == 0)
+            {
+                <p class="alert alert-danger">Couldn't load municipalities.</p>
+            }
+            else
+            {
+                <select class="form-select" id="municipalityDropdown" @onchange="HandleMunicipalityChangeDropDown">
+                    <option value="0">Alla kommuner</option>
+                    @foreach (var municipality in Municipalities)
+                    {
+                        <option value="@municipality.Id">@municipality.Name</option>
+                    }
+                </select>
+            }
         </div>
     </div>
 
@@ -58,14 +79,6 @@
                                             </div>
                                         }
                                     </div>
-                                    @*                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                        </button> *@
                                 </div>
 
                                 <div class="card-body">
@@ -73,12 +86,15 @@
                                     <p class="card-text">Utgångspris: @item.StartingPrice.ToString("N0") kr</p>
                                     <p class="card-text">Rum: @item.NumberOfRooms</p>
                                     <p class="card-text">Boarea: @item.LivingArea m²</p>
-                                    <!-- Add other details as needed -->
                                 </div>
                             </a>
                             <button class="btn btn-info" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button>
+                            <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                                <Authorized>
                             <button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button>
-                            <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button>
+                            <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSaleObject(item.Id))">Ta bort</button>
+                                </Authorized>
+                            </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                         </div>
                     </div>
                 }
@@ -106,14 +122,6 @@
                                                 </div>
                                             }
                                         </div>
-                                        @*                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls_@item.Id" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                        </button> *@
                                     </div>
 
                                     <div class="card-body">
@@ -124,9 +132,13 @@
                                         <!-- Add other details as needed -->
                                     </div>
                                 </a>
+                                <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+                                    <Authorized>
                                 <button class="btn btn-info" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button>
                                 <button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button>
-                                <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button>
+                                <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSaleObject(item.Id))">Ta bort</button>
+                                    </Authorized>
+                                </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                             </div>
                         </div>
                     }
@@ -147,18 +159,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync("/api/salesobject");
-        if (response.IsSuccessStatusCode)
+        Response<List<SaleObject>> response = await saleObjectService.GetSaleObjectAsync();
+        if (response.Success)
         {
-            SaleObjects = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
+            SaleObjects = response.Data;
             FilteredObjects = SaleObjects;
             InactiveObjects = SaleObjects.Where(o => o.IsActive == false).ToList();
         }
 
-        var municipalityResponse = await httpClient.GetAsync("/api/municipalities");
-        if (municipalityResponse.IsSuccessStatusCode)
+        // var municipalityResponse = await httpClient.GetAsync("/api/municipalities");
+        var municipalityResponse = await municipalityService.GetMunicipalitiesAsync();
+        if (municipalityResponse.Success)
         {
-            Municipalities = await municipalityResponse.Content.ReadFromJsonAsync<List<Municipality>>();
+            Municipalities = municipalityResponse.Data.ToList();
         }
     }
 
@@ -186,7 +199,8 @@
         FilteredObjects = SaleObjects.Where(o =>
             o.Address.ToLower().Contains(search) ||
             o.Description.ToLower().Contains(search) ||
-            o.RealEstateAgent.FullName.ToLower().Contains(search)
+            o.RealEstateAgent.FirstName.ToLower().Contains(search) ||
+            o.RealEstateAgent.LastName.ToLower().Contains(search)
         ).ToList();
         SaleObjects = FilteredObjects;
     }
@@ -211,11 +225,12 @@
         navMan.NavigateTo($"/SalesObject/EditSalesObject/{id}");
     }
 
-    private async Task NavigateToDeleteSalesObject(int id)
+    private async Task NavigateToDeleteSaleObject(int id)
     {
+
         if (await JSRuntime.InvokeAsync<bool>("confirmDelete"))
         {
-            await httpClient.DeleteAsync($"/api/salesObject/{id}");
+            await saleObjectService.DeleteSaleObjectAsync(id);
             await OnInitializedAsync();
         }
     }

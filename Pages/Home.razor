@@ -1,10 +1,13 @@
 ﻿@page "/"
-@using FribergHomezClient.Models
+@* @using FribergHomezClient.Models *@
+@using FribergHomezClient.Services.Base
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services.ModelService
 @inject HttpClient httpClient
 @inject NavigationManager navMan
 @inject IJSRuntime JSRuntime
+@inject ISaleObjectService saleObjectService
 
 <PageTitle>Home</PageTitle>
 
@@ -63,10 +66,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync("/api/salesobject");
-        if (response.IsSuccessStatusCode)
+        var response = await saleObjectService.GetSaleObjectAsync();
+        if (response.Success)
         {
-            SalesObjectsList = await response.Content.ReadFromJsonAsync<List<SaleObject>>();
+            SalesObjectsList = response.Data;
 
         }
 

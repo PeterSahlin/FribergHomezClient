@@ -1,5 +1,4 @@
 ﻿using Blazored.LocalStorage;
-
 using FribergHomezClient.Services.Base;
 using System.Net;
 
@@ -7,6 +6,7 @@ namespace FribergHomezClient.Services.ModelService
 {
     public class RealEstateAgentService : BaseHttpService, IRealEstateAgentService
     {
+
         //Peter
 
         //PROPERTIES
@@ -16,6 +16,7 @@ namespace FribergHomezClient.Services.ModelService
         {
             this.client = client;
         }
+
 
 
         //METHODS
@@ -42,6 +43,7 @@ namespace FribergHomezClient.Services.ModelService
 
         //get all
         public async Task<Response<List<RealEstateAgent>>> GetRealEstateAgentsAsync()
+
         {
             Response<List<RealEstateAgent>> response;
 
@@ -62,15 +64,19 @@ namespace FribergHomezClient.Services.ModelService
             return response;
         }
 
+
         //get by id
         public async Task<Response<RealEstateAgent>> GetRealEstateAgentByIdAsync(string agentId)
+
         {
             Response<RealEstateAgent> response;
 
             try
             {
                 await GetBearerToken();
+
                 var data = await client.RealEstateAgentGETAsync(agentId);
+
                 response = new Response<RealEstateAgent>
                 {
                     Data = data,
@@ -84,13 +90,17 @@ namespace FribergHomezClient.Services.ModelService
             return response;
         }
 
+
         //update
         public async Task UpdateRealEstateAgentAsync(RealEstateAgent agent)
+
         {
             try
             {
                 await GetBearerToken();
+
                 await client.RealEstateAgentPUTAsync(agent);
+
             }
             catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
@@ -101,14 +111,18 @@ namespace FribergHomezClient.Services.ModelService
                 Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
+
         //delete (set inactive)
         public async Task<Response<RealEstateAgent>> DeleteRealEstateAgentAsync(string agentId)
+
         {
             Response<RealEstateAgent> response;
             await GetBearerToken();
             try
             {
+
                 await client.RealEstateAgentDELETEAsync(agentId);
+
                 response = new Response<RealEstateAgent>
                 {
                     Success = true
@@ -120,6 +134,7 @@ namespace FribergHomezClient.Services.ModelService
             }
             return response;
         }
+
 
         //delete (permanently delete)
         public async Task<Response<RealEstateAgent>> DeleteAsync(string agentId)
@@ -139,6 +154,7 @@ namespace FribergHomezClient.Services.ModelService
                 response = ConvertApiExceptions<RealEstateAgent>(e);
             }
             return response;
+
         }
     }
 }

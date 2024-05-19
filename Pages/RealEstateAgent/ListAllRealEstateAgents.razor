@@ -2,12 +2,14 @@
 @using FribergHomezClient.Components
 @using System.Net.Http.Json
 @using System.Text.Json
+
 @using FribergHomezClient.Services.Base
 @using FribergHomezClient.Services.ModelService
 @inject IJSRuntime JSRuntime
 @inject HttpClient httpClient
 @inject NavigationManager navMan
 @inject IFirmService firmService
+
 @inject IRealEstateAgentService realEstateAgentService
 
 <script>
@@ -239,6 +241,7 @@ else
     //METHODS
     protected override async Task OnInitializedAsync()
     {
+
         Response<List<RealEstateAgent>> response = await realEstateAgentService.GetRealEstateAgentsAsync();
         if (response.Success)
         {
@@ -248,6 +251,7 @@ else
             KedjekamraterAgentList = AllAgentList.Where(r => r.Firm.Name.Contains("Kedjekamrater")).ToList();
             RakaPuckarAgentList = AllAgentList.Where(r => r.Firm.Name.Contains("Raka")).ToList();
             SlagskottAgentList = AllAgentList.Where(r => r.Firm.Name.Contains("Slagskott")).ToList();
+
         }
     }
 

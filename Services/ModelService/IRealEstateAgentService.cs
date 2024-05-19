@@ -4,6 +4,7 @@ namespace FribergHomezClient.Services.ModelService
 {
     public interface IRealEstateAgentService
     {
+
         //create
         Task CreateRealEstateAgentAsync(AgentDto agent);
 
