@@ -30,7 +30,7 @@ namespace FribergHomezClient
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             builder.Services.AddScoped<IFirmService, FirmService>();
 
-
+            builder.Services.AddScoped<IRealEstateAgentService, RealEstateAgentService>();
 
 
 
