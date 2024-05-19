@@ -81,7 +81,7 @@
     protected override async Task OnInitializedAsync()
     {
         // var agentResponse = await httpClient.GetAsync($"api/RealEstateAgent/{Id}");
-        var response = await realEstateAgentService.GetAgentByIdAsync(Id.ToString());
+        var response = await realEstateAgentService.GetRealEstateAgentByIdAsync(Id.ToString());
         if (response.Success)
         {
             CurrentRealEstateAgent = response.Data;
