@@ -25,7 +25,7 @@
 }
 else
 {
-   @*  @if (inloggad som admin = true)
+    @*  @if (inloggad som admin = true)
     {
         aktiva mäklare
     }
@@ -35,12 +35,16 @@ else
     } *@
     <h1 class="display-4">Våra mäklare</h1>                                                                         @*endast visas för kunder. Flytta upp till "else".*@
     <br />
-    @* add real estate agent button *@
-    <h3 class="display-5">Aktiva mäklare</h3>                                                                   @*endast visas om inloggad/admin. Flytta upp till "if".*@
-    <br />
-    <button class="btn btn-primary" @onclick="NavigateToAddRealEstateAgentPage">Lägg till mäklare</button>
-    <br />
-    <br />
+    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+        <Authorized>
+            <h3 class="display-5">Aktiva mäklare</h3>
+            <br />
+            <button class="btn btn-primary" @onclick="NavigateToAddRealEstateAgentPage">Lägg till mäklare</button>
+            <br />
+            <br />
+        </Authorized>
+    </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    @*endast visas om inloggad/admin. Flytta upp till "if".*@
 
 
     @*ACTIVE AGENTS TABLES*@
@@ -180,47 +184,49 @@ else
 
     @*INACTIVE AGENT TABLE*@
     @*if-sats här med hela kodstycket.                                                                                    endast visas om inloggad/admin*@
+    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+        <Authorized>
 
+            <h3 class="display-5">Inaktiva mäklare</h3>
 
-    <h3 class="display-5">Inaktiva mäklare</h3>            
+            <div class="row row-cols-1 row-cols-md-3 g-4 d-flex align-items-stretch">
+                @foreach (var item in InactiveAgentList)
+                {
+                    if (item.IsActive == false)
+                    {
+                        <div class="col">
+                            <div class="card" style="height:320px; ">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img src="@item.ImageUrl" class="card-img" alt="@item.FirstName @item.LastName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@item.FirstName @item.LastName</h5>
+                                            <p class="card-text"><b>E-post:</b> @item.Email</p>
+                                            <p class="card-text"><b>Telefonnummer:</b> @item.PhoneNumber</p>
+                                            <p class="card-text"><b>Mäklarfirma:</b> @item.Firm.Name</p>
+                                            @*     <p class="card-text">Status: Aktiv</p>  *@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row g-0 mt-auto">
+                                    <div class="col text-center py-3">
+                                        <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4 d-flex align-items-stretch">
-        @foreach (var item in InactiveAgentList)
-        {
-            if (item.IsActive == false)
-            {
-                <div class="col">
-                    <div class="card" style="height:320px; ">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="@item.ImageUrl" class="card-img" alt="@item.FirstName @item.LastName" style="max-width: 100%; max-height: 100%; object-fit: cover;" />
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">@item.FirstName @item.LastName</h5>
-                                    <p class="card-text"><b>E-post:</b> @item.Email</p>
-                                    <p class="card-text"><b>Telefonnummer:</b> @item.PhoneNumber</p>
-                                    <p class="card-text"><b>Mäklarfirma:</b> @item.Firm.Name</p>
-                                    @*     <p class="card-text">Status: Aktiv</p>  *@
+                                        <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+
+                                        <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteInactiveRealEstateAgent(item.Id))">Ta bort</button>
+                                    </div>
+                                    <br />
                                 </div>
                             </div>
                         </div>
-                        <div class="row g-0 mt-auto">
-                            <div class="col text-center py-3">
-                                <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
-
-                                <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
-
-                                <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteInactiveRealEstateAgent(item.Id))">Ta bort</button>
-                            </div>
-                            <br />
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-    </div>
-
+                    }
+                }
+            </div>
+        </Authorized>
+    </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
 }
 
 
@@ -279,7 +285,7 @@ else
     public async Task SetAgentInactive(string id)
     {
         if (await JSRuntime.InvokeAsync<bool>
-    ("confirmDelete"))
+        ("confirmDelete"))
         {
             await realEstateAgentService.DeleteRealEstateAgentAsync(id);
             await OnInitializedAsync();
@@ -291,7 +297,7 @@ else
     private async Task NavigateToDeleteInactiveRealEstateAgent(string id)
     {
         if (await JSRuntime.InvokeAsync<bool>
-            ("confirmDelete"))
+        ("confirmDelete"))
         {
             await realEstateAgentService.DeleteAsync(id);
             await OnInitializedAsync();
