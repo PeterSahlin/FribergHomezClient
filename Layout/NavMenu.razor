@@ -10,8 +10,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="/images/FribergHomezLogo.jpeg" alt="FribergHomezClient" width="40" height="40" style="border-radius: 15px;" />
-            FribergHomezClient
+            <img src="/images/FribergHomezLogo.jpeg" alt="FribergHomezClientLogo" width="40" height="40" style="border-radius: 15px;" />
+            Friberg Homez
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
@@ -23,45 +23,73 @@
                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Hem
                     </NavLink>
                 </li>
+
                 <li class="nav-item">
                     <NavLink class="nav-link" href="SalesObject/ListAllSalesObjects">
-                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Alla försäljningsobjekt
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Våra försäljningsobjekt
                     </NavLink>
                 </li>
-                <AuthorizeView>
-                    <Authorized>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="SalesObject/REAgentSalesObjects">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Mina försäljningsobjekt
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="Municipality/ListAllMunicipalities">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Kommuner
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="Category/ListAllCategories">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Kategorier
-                    </NavLink>
-                </li>
-                <li class="nav-item">
-                    <NavLink class="nav-link" href="Firm/ListAllFirms">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Firmor
-                    </NavLink>
-                </li>
+                   <AuthorizeView>
+                    <NotAuthorized>
                 <li class="nav-item">
                     <NavLink class="nav-link" href="RealEstateAgent/ListAllRealEstateAgents">
-                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Alla mäklare
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Våra mäklare
                     </NavLink>
                 </li>
+                    </NotAuthorized>
+                </AuthorizeView>
 
+                @*for real estate agents*@
+                <AuthorizeView Roles="User">
+                    <Authorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="SalesObject/REAgentSalesObjects">
+                                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Mina försäljningsobjekt
+                            </NavLink>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+
+                @*for admins*@
+                <AuthorizeView Roles="Administrator">
+                    <Authorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="RealEstateAgent/ListAllRealEstateAgents">
+                                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Mäklare
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Municipality/ListAllMunicipalities">
+                                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Kommuner
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Category/ListAllCategories">
+                                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Kategorier
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Firm/ListAllFirms">
+                                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Firmor
+                            </NavLink>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+                </ul>
+                
+                @*not logged in*@
+            <ul class="navbar-nav ms-auto">
+              
+                <AuthorizeView>
+                    <Authorized>
                         <li class="nav-item" style="cursor:pointer;">
                             <NavLink class="nav-link" @onclick="Logout">
                                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Logga ut
                             </NavLink>
                         </li>
                     </Authorized>
+                </AuthorizeView>
+                <AuthorizeView>
                     <NotAuthorized>
                         <li class="nav-item">
                             <NavLink class="nav-link" href="Login/UserLogin">
@@ -70,6 +98,7 @@
                         </li>
                     </NotAuthorized>
                 </AuthorizeView>
+              
             </ul>
         </div>
     </div>
@@ -79,7 +108,7 @@
     private bool collapseNavMenu = true;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    
+
 
     private async Task Logout()
     {

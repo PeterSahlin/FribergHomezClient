@@ -25,23 +25,22 @@
 }
 else
 {
-    @*  @if (inloggad som admin = true)
-    {
-        aktiva mäklare
-    }
-    else
-    {
-        våra mäklare
-    } *@
-    <h1 class="display-4">Våra mäklare</h1>                                                                         @*endast visas för kunder. Flytta upp till "else".*@
-    <br />
     <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+        <NotAuthorized>
+            <h1 class="display-4">Våra mäklare</h1>                                                                         @*endast visas för kunder. Flytta upp till "else".*@
+        </NotAuthorized>
+    </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    <br />
+    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
         <Authorized>
-            <h3 class="display-5">Aktiva mäklare</h3>
-            <br />
-            <button class="btn btn-primary" @onclick="NavigateToAddRealEstateAgentPage">Lägg till mäklare</button>
+            <h1 class="display-4">Aktiva mäklare</h1>
             <br />
             <br />
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <button class="btn btn-primary" @onclick="NavigateToAddRealEstateAgentPage">Lägg till mäklare</button>
+            </div>
+
         </Authorized>
     </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
     @*endast visas om inloggad/admin. Flytta upp till "if".*@
@@ -50,6 +49,7 @@ else
     @*ACTIVE AGENTS TABLES*@
 
     @*kedjekamrater firm agents*@
+
     <h3 class="display-6">Kedjekamrater Fastighetsmäkleri</h3>
     <hr style="margin-top:1px;" />
     <div class="row row-cols-1 row-cols-md-3 g-4 d-flex align-items-stretch">
@@ -75,11 +75,13 @@ else
                         </div>
                         <div class="row g-0 mt-auto">
                             <div class="col text-center py-3">
-                                <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
-
-                                <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
-
-                                <button class="btn btn-danger" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
+                                    <Authorized>
+                                        <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
+                                        <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+                                        <button class="btn btn-danger" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                    </Authorized>
+                                </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                             </div>
                             <br />
                         </div>
@@ -120,11 +122,13 @@ else
                         </div>
                         <div class="row g-0 mt-auto">
                             <div class="col text-center py-3">
-                                <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
-
-                                <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
-
-                                <button class="btn btn-danger" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
+                                    <Authorized>
+                                        <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
+                                        <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+                                        <button class="btn btn-danger" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                    </Authorized>
+                                </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                             </div>
                             <br />
                         </div>
@@ -162,11 +166,13 @@ else
                         </div>
                         <div class="row g-0 mt-auto">
                             <div class="col text-center py-3">
-                                <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
-
-                                <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
-
-                                <button class="btn btn-danger" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
+                                    <Authorized>
+                                        <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
+                                        <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+                                        <button class="btn btn-danger" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                    </Authorized>
+                                </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                             </div>
                             <br />
                         </div>
@@ -183,11 +189,11 @@ else
 
 
     @*INACTIVE AGENT TABLE*@
-    @*if-sats här med hela kodstycket.                                                                                    endast visas om inloggad/admin*@
-    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+
+    <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
         <Authorized>
 
-            <h3 class="display-5">Inaktiva mäklare</h3>
+            <h1 class="display-4">Inaktiva mäklare</h1>
 
             <div class="row row-cols-1 row-cols-md-3 g-4 d-flex align-items-stretch">
                 @foreach (var item in InactiveAgentList)
