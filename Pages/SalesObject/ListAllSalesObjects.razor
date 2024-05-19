@@ -32,13 +32,7 @@
         </div>
         <div>
             <label for="municipalityDropdown" class="me-2">Välj kommun:</label>
-@*             <select class="form-select" id="municipalityDropdown" @onchange="HandleMunicipalityChangeDropDown">
-                <option value="0">Alla kommuner</option>
-                @foreach (var municipality in Municipalities)
-                {
-                    <option value="@municipality.Id">@municipality.Name</option>
-                }
-            </select> *@
+
             @if (Municipalities.Count == 0)
             {
                 <p class="alert alert-danger">Couldn't load municipalities.</p>
