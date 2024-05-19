@@ -4,14 +4,24 @@ namespace FribergHomezClient.Services.ModelService
 {
     public interface IRealEstateAgentService
     {
-        Task<Response<List<RealEstateAgent>>> GetAgentsAsync();
 
-        Task<Response<RealEstateAgent>> GetAgentByIdAsync(string id);
+        //create
+        Task CreateRealEstateAgentAsync(AgentDto agent);
 
-        Task CreateAgentAsync(AgentDto agent);
+        //read
+        Task<Response<List<RealEstateAgent>>> GetRealEstateAgentsAsync();
 
-        Task<Response<RealEstateAgent>> DeleteAgentAsync(string Id);
+        Task<Response<RealEstateAgent>> GetRealEstateAgentByIdAsync(string agentId);
 
-        Task UpdateAgentAsync(RealEstateAgent agent);
+        //update
+        Task UpdateRealEstateAgentAsync(RealEstateAgent agent);
+
+
+        //delete (set inactive)
+        Task<Response<RealEstateAgent>> DeleteRealEstateAgentAsync(string agentId);
+
+        //delete (permanently)
+        Task<Response<RealEstateAgent>> DeleteAsync(string agentId);
+
     }
 }

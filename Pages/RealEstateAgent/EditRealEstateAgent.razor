@@ -1,12 +1,16 @@
 ﻿@page "/RealEstateAgent/EditRealEstateAgent/{Id:guid}"
-@using FribergHomezClient.Services.Base
-@using FribergHomezClient.Services.ModelService
+
 @using System.Net.Http.Json
 @using System.Text.Json
+@using FribergHomezClient.Services.Base
+@using FribergHomezClient.Services.ModelService
 @inject HttpClient httpClient
 @inject NavigationManager navMan
 @inject IRealEstateAgentService realEstateAgentService
 @inject IFirmService firmService
+
+@inject IJSRuntime JSRuntime
+
 
 @*Peter*@
 <div class="container">
@@ -57,10 +61,7 @@
                         }
                     </div>
 
-                    @*    <div>
-                    <label for="imageurl">Bildlänk:</label>
-                    <input type="text" id="imageurl" @bind="@CurrentRealEstateAgent.ImageUrl" />
-                    </div> *@
+
                     <div>
                         <label for="firmDropDown">Mäklarfirma:</label>
                         <select id="firmDropDown" class="btn btn-secondary btn-sm dropdown-toggle mt-3 mb-3" @bind="@CurrentRealEstateAgent.FirmId">
@@ -71,26 +72,17 @@
                             }
                         </select>
                     </div>
-                    @*TEST*@
-                    @* <div *@                                                                                                  @*Drop down menu*@
-                    @* <label for="statusDropDown">Status:</label>
-                    <select id="statusDropDown" @onchange="UpdateStatus">
-                    <option value="0">Inaktiv</option>
-                    <option value="1">Aktiv</option>
-                    </select>
-                    </div>*@
-
 
 
                     <div class="row mb-3">
-                    <div class="col-auto">
-                        <input class="btn-check mb-3" type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
-                        <label class="btn btn-outline-success btn-sm" for="activeRadio">Aktiv</label>
-                    </div>
                         <div class="col-auto">
-                        <input type="radio" class="btn-check" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
-                        <label class="btn btn-outline-danger btn-sm" for="inactiveRadio">Inaktiv</label>
-                    </div>
+                            <input class="btn-check mb-3" type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
+                            <label class="btn btn-outline-success btn-sm" for="activeRadio">Aktiv</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="radio" class="btn-check" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
+                            <label class="btn btn-outline-danger btn-sm" for="inactiveRadio">Inaktiv</label>
+                        </div>
                     </div>
 
                     @if (showStatusPopup)
@@ -103,7 +95,7 @@
 
 
 
-                        <br />  
+                    <br />
                     <button class="btn btn-success" type="submit">Spara</button>
                     <button class="btn btn-danger" @onclick="BackButton">Avbryt</button>
                 </form>
@@ -136,18 +128,29 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // var agentResponse = await httpClient.GetAsync($"api/RealEstateAgent/{Id}");
-        var agentResponse = await realEstateAgentService.GetAgentByIdAsync(Id.ToString());
-        if (agentResponse.Success)
+
+        //set current real estate agent
+        Response<RealEstateAgent> response = await realEstateAgentService.GetRealEstateAgentByIdAsync(Id.ToString());
+        if (response.Success)
         {
-            CurrentRealEstateAgent = agentResponse.Data;
+            CurrentRealEstateAgent = response.Data;
+        }
+        else
+        {
+            Console.WriteLine("Couldn't set Current Real Estate Agent from database.");
         }
 
-        // var firmResponse = await httpClient.GetAsync("api/Firm");
-        var firmResponse = await firmService.GetFirmsAsync();
-        if (firmResponse.Success)
+
+        //get firms
+        Response<List<Firm>> firmResponse = await firmService.GetFirmsAsync();
+        if (response.Success)
         {
             FirmList = firmResponse.Data.Where(s => s.IsActive == true).ToList();
+        }
+        else
+        {
+            Console.WriteLine("Couldn't get Firms from database.");
+
         }
     }
 
@@ -165,9 +168,11 @@
         UpdatedRealEstateAgent = CurrentRealEstateAgent;
         try
         {
-            // var updateAgentResponse = await httpClient.PutAsJsonAsync("/api/RealEstateAgent/", UpdatedRealEstateAgent);
-            await realEstateAgentService.UpdateAgentAsync(UpdatedRealEstateAgent);
+
+            await realEstateAgentService.UpdateRealEstateAgentAsync(UpdatedRealEstateAgent);
             navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
+
+
         }
         catch (Exception ex)
         {
@@ -187,17 +192,6 @@
         {
             CurrentRealEstateAgent.IsActive = true;
         }
-        // var value = Convert.ToInt32(e.Value);
-        // switch (value)
-        // {
-        //     case 0:
-        //         CurrentRealEstateAgent.IsActive = false;
-        //         break;
-        //     case 1:
-        //         CurrentRealEstateAgent.IsActive = true;
-        //         break;
-        // }
-
     }
 
     private async void AddImgUrl()
@@ -205,8 +199,6 @@
         if (!string.IsNullOrEmpty(AddNewImgUrl))
         {
             CurrentRealEstateAgent.ImageUrl = AddNewImgUrl;
-            // newImgUrl.Add(addNewImgUrl);
-            // addNewImgUrl = string.Empty;
             showPopup = true;
             await Task.Delay(1000);
             showPopup = false;
@@ -218,13 +210,9 @@
     {
         CurrentRealEstateAgent.ImageUrl = "";
     }
-    private void ReturnToListAll()
-    {
-        navMan.NavigateTo("/SalesObject/ListAllSalesObjects");
-    }
 
     public async Task BackButton()
     {
-        navMan.NavigateTo("/RealEstateAgent/ListAllRealEstateAgents");
+        await JSRuntime.InvokeVoidAsync("history.back");
     }
 }

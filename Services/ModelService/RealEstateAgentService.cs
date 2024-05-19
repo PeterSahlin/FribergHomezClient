@@ -6,13 +6,44 @@ namespace FribergHomezClient.Services.ModelService
 {
     public class RealEstateAgentService : BaseHttpService, IRealEstateAgentService
     {
+
+        //Peter
+
+        //PROPERTIES
+
         private readonly IClient client;
         public RealEstateAgentService(ILocalStorageService localStorage, IClient client) : base(localStorage, client)
         {
             this.client = client;
         }
 
-        public async Task<Response<List<RealEstateAgent>>> GetAgentsAsync()
+
+
+        //METHODS
+
+        //create
+        public async Task CreateRealEstateAgentAsync(AgentDto agent)
+        {
+            try
+            {
+                await GetBearerToken();
+                await client.RealEstateAgentPOSTAsync(agent);
+            }
+
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            {
+                Console.WriteLine("404 error occurred");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+
+
+        //get all
+        public async Task<Response<List<RealEstateAgent>>> GetRealEstateAgentsAsync()
+
         {
             Response<List<RealEstateAgent>> response;
 
@@ -33,14 +64,19 @@ namespace FribergHomezClient.Services.ModelService
             return response;
         }
 
-        public async Task<Response<RealEstateAgent>> GetAgentByIdAsync(string id)
+
+        //get by id
+        public async Task<Response<RealEstateAgent>> GetRealEstateAgentByIdAsync(string agentId)
+
         {
             Response<RealEstateAgent> response;
 
             try
             {
                 await GetBearerToken();
-                var data = await client.RealEstateAgentGETAsync(id);
+
+                var data = await client.RealEstateAgentGETAsync(agentId);
+
                 response = new Response<RealEstateAgent>
                 {
                     Data = data,
@@ -54,12 +90,17 @@ namespace FribergHomezClient.Services.ModelService
             return response;
         }
 
-        public async Task CreateAgentAsync(AgentDto agent)
+
+        //update
+        public async Task UpdateRealEstateAgentAsync(RealEstateAgent agent)
+
         {
             try
             {
                 await GetBearerToken();
-                await client.RealEstateAgentPOSTAsync(agent);
+
+                await client.RealEstateAgentPUTAsync(agent);
+
             }
             catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
@@ -71,13 +112,17 @@ namespace FribergHomezClient.Services.ModelService
             }
         }
 
-        public async Task<Response<RealEstateAgent>> DeleteAgentAsync(string Id)
+        //delete (set inactive)
+        public async Task<Response<RealEstateAgent>> DeleteRealEstateAgentAsync(string agentId)
+
         {
             Response<RealEstateAgent> response;
             await GetBearerToken();
             try
             {
-                await client.RealEstateAgentDELETEAsync(Id);
+
+                await client.RealEstateAgentDELETEAsync(agentId);
+
                 response = new Response<RealEstateAgent>
                 {
                     Success = true
@@ -90,21 +135,26 @@ namespace FribergHomezClient.Services.ModelService
             return response;
         }
 
-        public async Task UpdateAgentAsync(RealEstateAgent agent)
+
+        //delete (permanently delete)
+        public async Task<Response<RealEstateAgent>> DeleteAsync(string agentId)
         {
+            Response<RealEstateAgent> response;
+            await GetBearerToken();
             try
             {
-                await GetBearerToken();
-                await client.RealEstateAgentPUTAsync(agent);
+                await client.DeleteAsync(agentId);
+                response = new Response<RealEstateAgent>
+                {
+                    Success = true
+                };
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            catch (ApiException e)
             {
-                Console.WriteLine("404 error occurred");
+                response = ConvertApiExceptions<RealEstateAgent>(e);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            return response;
+
         }
     }
 }

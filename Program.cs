@@ -34,7 +34,7 @@ namespace FribergHomezClient
             builder.Services.AddScoped<ISaleObjectService, SaleObjectService>();
             builder.Services.AddScoped<IRealEstateAgentService, RealEstateAgentService>();
 
-
+            builder.Services.AddScoped<IRealEstateAgentService, RealEstateAgentService>();
 
 
 
