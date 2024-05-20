@@ -20,68 +20,70 @@
 </script>
 
 @*Henrik*@
-<div class="container">
-    <h3 class="mb-4">Alla Mäklarfirmor</h3>
+<Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
+    <Authorized>
+        <div class="container">
+            <h1 class="display-4">Mäklarfirmor</h1>
+            <br />
+            <div class="mb-3">
+                <button class="btn btn-primary" @onclick="NavigateToAddNewFirmPage">Lägg till ny firma</button>
+            </div>
 
-    <div class="mb-3">
-        <button class="btn btn-primary" @onclick="NavigateToAddNewFirmPage">Lägg till ny firma</button>
-    </div>
-
-    @if (Firms == null)
-    {
-        <p>Couldn't load firms.</p>
-    }
-    else
-    {
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Namn</th>
-                        <th>Presentation</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Firms)
-                    {
-                        @if (item.IsActive)
-                        {
-
+            @if (Firms == null)
+            {
+                <p>Couldn't load firms.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>@item.Name</td>
-                                <td style="max-width: 700px;">@item.Presentation</td>
-                                <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
-                                    <Authorized>
+                                <th>Logotyp</th>
+                                <th>Namn</th>
+                                <th>Presentation</th>
+                                <th></th>
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Firms)
+                            {
+                                @if (item.IsActive)
+                                {
+
+                                    <tr>
+                                        <td> <img src="@(item.ImageLocation.StartsWith("http") ? item.ImageLocation : "/images/" + item.ImageLocation)" class="card-img" alt="@item.Name" style="width:220px;" /></td>
+                                        <td>@item.Name</td>
+                                        <td style="max-width: 700px;">@item.Presentation</td>
                                         <td>
                                             <button class="btn btn-info" @onclick="@(e => NavigateToFirmDetails(item.Id))">Detaljer</button>
                                         </td>
                                         <td>
                                             <button class="btn btn-warning" @onclick="@(e => NavigateToEditFirm(item.Id))">Redigera</button>
                                         </td>
-                                        <td>
+                                        <td style="width:100px;">
                                             <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteFirm(item.Id))">Ta bort</button>
                                         </td>
-                                    </Authorized>
-                                </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
-                            </tr>
+                                    </tr>
 
-                        }
-                    }
-                </tbody>
-            </table>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
         </div>
-    }
-</div>
+    </Authorized>
+</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
 
 @code {
 
-
+    //PROPERTIES
     public List<Firm> Firms { get; set; } = new List<Firm>();
 
-
+    //METHODS
     protected override async Task OnInitializedAsync()
     {
 
@@ -91,22 +93,25 @@
 
     }
 
+    //add new firm
     private async Task NavigateToAddNewFirmPage()
     {
         navMan.NavigateTo("/Firm/AddFirm");
     }
+    //firm details
     private void NavigateToFirmDetails(int id)
     {
         navMan.NavigateTo($"/Firm/FirmDetails/{id}");
     }
+    //update firm
     private void NavigateToEditFirm(int id)
     {
         navMan.NavigateTo($"/Firm/EditFirm/{id}");
     }
-
+    //delete firm
     private async Task NavigateToDeleteFirm(int id)
     {
-        
+
         if (await JSRuntime.InvokeAsync<bool>("confirmDelete"))
         {
             await firmService.DeleteFirmAsync(id);
