@@ -14,30 +14,7 @@
 @inject IRealEstateAgentService realEstateAgentService
 
 
-@* <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card" style="height:auto; padding-left:50px; padding-right:50px; padding-top:20px; padding-bottom:20px; ">
-                <h3>Logga in</h3>
-                <form @onsubmit="HandleLogin">
-                    <div>
-                        <label for="email">E-post:</label>
-                        <input type="text" class="form-control mb-3" id="email" @bind="NewLogin.Email" />
-                    </div>
-                    <div>
-                        <label for="password">Lösenord:</label>
-                        <input type="text" class="form-control mb-3" id="password" @bind="NewLogin.Password" />
-                    </div>
-                    <div>
-                        <p>Har du inget konto? Registrera dig <NavLink href="RealEstateAgent/AddRealEstateAgent">här</NavLink></p>
-                        <button class="btn btn-success" type="submit">Logga in</button>
-                        <button class="btn btn-danger" @onclick="BackButton">Avbryt</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> *@
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -57,9 +34,9 @@
                             <InputText class="form-control" type="password" @bind-Value="NewLogin.Password" />
                             <ValidationMessage For="@(() => NewLogin.Password)" />
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block mt-3">Logga in</button>
-                        <button type="button" class="btn btn-info btn-block mt-3"
-                        @onclick="NavigateToRegister">Registrera dig</button>
+                        <button type="submit" class="btn btn-primary btn-block mt-3" style="background-color:#4F709C; border-color:#4F709C;">Logga in</button>
+                        <button type="button" class="btn btn-info btn-block mt-3" style="background-color:lightgray; border-color:lightgray;"
+                                @onclick="NavigateToRegister">Registrera dig</button>
                     </EditForm>
                 </div>
             </div>
