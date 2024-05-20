@@ -21,6 +21,8 @@
 
 <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
     <Authorized>
+        <PageTitle>Mäklarfirmor</PageTitle>
+
         <div class="container">
             <h1 class="display-4">Mäklarfirmor</h1>
             <br />
@@ -34,49 +36,34 @@
             }
             else
             {
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Logotyp</th>
-                                <th>Namn</th>
-                                <th>Presentation</th>
-                                <th></th>
-                                <th></th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Firms)
-                            {
-                                @if (item.IsActive)
-                                {
-
-                                    <tr>
-                                        <td> <img src="@(item.ImageLocation.StartsWith("http") ? item.ImageLocation : "/images/" + item.ImageLocation)" class="card-img" alt="@item.Name" style="width:220px;" /></td>
-                                        <td>@item.Name</td>
-                                        <td style="max-width: 700px;">@item.Presentation</td>
-                                        <td>
-                                            <button class="btn btn-info" @onclick="@(e => NavigateToFirmDetails(item.Id))">Detaljer</button>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-warning" @onclick="@(e => NavigateToEditFirm(item.Id))">Redigera</button>
-                                        </td>
-                                        <td style="width:100px;">
-                                            <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteFirm(item.Id))">Ta bort</button>
-                                        </td>
-                                    </tr>
-
-                                }
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                @foreach (var item in Firms)
+                {
+                    @if (item.IsActive)
+                    {
+                        <div class="card mb-3">
+                            <div class="row no-gutters">
+                                <div class="col-md-2">
+                                    <img src="@(item.ImageLocation.StartsWith("http") ? item.ImageLocation : "/images/" + item.ImageLocation)" class="card-img" alt="@item.Name" style="width:100%;" />
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.Name</h5>
+                                        <p class="card-text" style="max-width: 700px;">@item.Presentation</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-center justify-content-end">
+                                    <button class="btn btn-info mr-2" style="margin-right: 5px;" @onclick="@(e => NavigateToFirmDetails(item.Id))">Detaljer</button>
+                                    <button class="btn btn-warning mr-2" style="margin-right: 5px;" @onclick="@(e => NavigateToEditFirm(item.Id))">Redigera</button>
+                                    <button class="btn btn-danger" style="white-space: nowrap; margin-right: 5px;" @onclick="@(e => NavigateToDeleteFirm(item.Id))">Ta bort</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
             }
         </div>
     </Authorized>
 </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
-
 @code {
 
     //PROPERTIES

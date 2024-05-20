@@ -10,7 +10,117 @@
 @inject IMunicipalityService municipalityService
 @inject IJSRuntime JSRuntime
 
-<h3>Redigera försäljningsobjekt</h3>
+<div class="card">
+    <h3 class="card-header">Redigera försäljningsobjekt</h3>
+    <div class="card-body">
+        @if (saleObject != null)
+        {
+            <form @onsubmit="@(e => {UpdateStatus(StatusValue); UpdateSaleObject(); })">
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" placeholder="Adress" @bind="saleObject.Address" required />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="Utgångspris" @bind="saleObject.StartingPrice" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="Boarea" @bind="saleObject.LivingArea" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="Biarea" @bind="saleObject.AncillaryArea" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="Tomtarea" @bind="saleObject.PlotArea" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" placeholder="Beskrivning" @bind="saleObject.Description" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="Antal rum" @bind="saleObject.NumberOfRooms" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="Månadsavgift" @bind="saleObject.MonthlyFee" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="Årsavgift" @bind="saleObject.OperatingCostPerYear" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" class="form-control" placeholder="Byggår" @bind="saleObject.YearOfConstruction" />
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Bildurl" @bind="addNewImgUrl" />
+                            <button type="button" class="btn btn-primary" @onclick="AddImgUrl">Lägg till bild</button>
+                        </div>
+                        @if (showPopup)
+                        {
+                            <div class="popup">
+                                <span class="popuptext">Bild tillagd!</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+
+                <div class="row mb-3">
+                    @foreach (var image in saleObject.ImageUrl)
+                    {
+                        <div class="col-md-3 mb-3">
+                            <div class="image-container">
+                                <img class="img-fluid" src="@image" alt="Image" />
+                                <button type="button" class="btn btn-danger btn-sm mt-2" @onclick="() => RemoveImgUrl(image)">Remove</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div>
+                    <select id="realEstateAgentDropDown" class="btn btn-secondary btn-sm dropdown-toggle mt-3 mb-3"
+                            placeholder="Mäklare" @bind="saleObject.RealEstateAgentId">
+                        <option>Välj mäklare</option>
+                        @foreach (var agent in RealEstateAgents)
+                        {
+                            <option value="@agent.Id">@agent.FirstName @agent.LastName</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-auto">
+                        <input class="btn-check mb-3" type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
+                        <label class="btn btn-outline-success btn-sm" for="activeRadio">Aktiv</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="radio" class="btn-check" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
+                        <label class="btn btn-outline-danger btn-sm" for="inactiveRadio">Inaktiv</label>
+                    </div>
+                </div>
+
+                @if (showStatusPopup)
+                {
+                    <div class="popup">
+                        <span class="popuptext" style="color:red;">Du måste göra ett val.</span>
+                    </div>
+                }
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <button class="btn btn-success me-2" type="submit">Spara</button>
+                        <button class="btn btn-danger" @onclick="BackButton">Avbryt</button>
+                    </div>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@* <h3>Redigera försäljningsobjekt</h3>
 @if (saleObject != null)
 {
     <form @onsubmit="@(e => {UpdateStatus(StatusValue); UpdateSaleObject();  })">
@@ -115,7 +225,7 @@
         </div>
     </div>
     </form>
-}
+} *@
 @code {
 
 
