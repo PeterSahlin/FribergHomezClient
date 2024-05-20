@@ -41,10 +41,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync($"/api/Firm/{Id}");
-        if (response.IsSuccessStatusCode)
+        Response<Firm> response = await firmService.GetFirmByIdAsync(Id);
+        if (response.Success)
         {
-            firm = await response.Content.ReadFromJsonAsync<Firm>();
+            firm = response.Data;
+        }
+        else
+        {
+            Console.WriteLine("Couldn't set Current Real Estate Agent from database.");
         }
     }
 
