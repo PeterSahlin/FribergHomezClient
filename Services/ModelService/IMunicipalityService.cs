@@ -4,6 +4,7 @@ namespace FribergHomezClient.Services.ModelService
 {
     public interface IMunicipalityService
     {
+        //Thomas
         Task<Response<List<Municipality>>> GetMunicipalitiesAsync();
 
         Task<Response<Municipality>> GetMunicipalityByIdAsync(int municipalityid);

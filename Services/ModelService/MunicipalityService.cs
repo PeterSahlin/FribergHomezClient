@@ -6,6 +6,7 @@ namespace FribergHomezClient.Services.ModelService
 {
     public class MunicipalityService : BaseHttpService, IMunicipalityService
     {
+        //Thomas
         private readonly IClient client;
         public MunicipalityService(ILocalStorageService localStorage, IClient client) : base(localStorage, client)
         {

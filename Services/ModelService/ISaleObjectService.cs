@@ -4,6 +4,7 @@ namespace FribergHomezClient.Services.ModelService
 {
     public interface ISaleObjectService
     {
+        //Henrik
         Task<Response<List<SaleObject>>> GetSaleObjectAsync();
 
         Task<Response<SaleObject>> GetSaleObjectByIdAsync(int id);

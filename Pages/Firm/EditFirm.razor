@@ -7,9 +7,9 @@
 @inject HttpClient httpClient
 @inject IFirmService firmService
 
-@*Henrik*@
+
 <div class="container">
-    <h3>Redigera</h3>
+    <h1 class="mb-4 display-4">Redigera</h1>
 
     @if (firm != null)
     {
@@ -18,7 +18,7 @@
                 <input type="text" class="form-control" id="Name" placeholder="Namn" @bind="firm.Name" required style="max-width: 500px;"/>
             </div>
             <div class="mb-3">
-                <textarea class="form-control" id="Presentation" placeholder="Presentation" @bind="firm.Presentation" required rows="3" style="max-width: 500px;"></textarea>
+                <textarea class="form-control" id="Presentation" placeholder="Presentation" @bind="firm.Presentation" required rows="3" style="max-width: 500px; height:350px;"></textarea>
             </div>
             <div class="mb-3">
                 <input type="text" class="form-control" id="ImageLocation" placeholder="IMG Location" @bind="firm.ImageLocation" required style="max-width: 500px;" />
