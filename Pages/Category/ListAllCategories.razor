@@ -20,36 +20,41 @@
 @*Henrik*@
 <PageTitle>Kategorier</PageTitle>
 
-<div class="container-fluid">
-    <h1 class="mb-4">Kategorier</h1>
-
-    <div class="mb-3">
+<div class="container">
+    <h1 class="display-4">Kategorier</h1>
+    <br />
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <button class="btn btn-primary" @onclick="@(e => NavigateToAddCategoryPage())">Lägg till ny kategori</button>
     </div>
 
     @if (CategoryList == null)
     {
-        <p> Kunde inte hitta några kategorier...</p>
+        <p> Kunde inte hitta några kategorier...</p>                                                                            //FIX FORMATING ON PAGE
     }
     else
     {
-        <thead>
-            <tr>
-                <th>Namn</th>
-            </tr>
-        </thead>
-        @foreach (var item in CategoryList)
-        {
-            <div class="card mb-3">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <h5 class="card-title mb-0">@item.Name</h5>
-                    <div>
-                        <button class="btn btn-warning mr-2" @onclick="@(e => NavigateToEditCategoryPage(item.Id))">Redigera</button>
-                        <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteCategory(item.Id))">Ta bort</button>
+        <div class="table-responsive">
+
+                <tr>
+                    <th>Namn</th>
+                 
+                </tr>
+    
+     
+                @foreach (var item in CategoryList)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">@item.Name</h5>
+                            <div>
+                                <button class="btn btn-warning mr-2" @onclick="@(e => NavigateToEditCategoryPage(item.Id))">Redigera</button>
+                                <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteCategory(item.Id))">Ta bort</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        }
+                }
+
+        </div>
     }
 </div>
 
