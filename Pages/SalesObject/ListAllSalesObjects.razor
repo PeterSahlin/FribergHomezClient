@@ -82,7 +82,7 @@
                                     <p class="card-text">Boarea: @item.LivingArea m²</p>
                                 </div>
                             </a>
-                            <button class="btn btn-info" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button>
+                            <button class="btn btn-info" style="background-color:lightslategrey;" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button>
                             <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                                 <Authorized>
                             <button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button>
