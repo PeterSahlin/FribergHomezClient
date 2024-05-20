@@ -22,67 +22,65 @@
     }
 </script>
 
-<h3 class="mb-4">Mina försäljningsobjekt</h3>
-
-@if (CurrentUser != null)
-{
-
-    @if (MySalesObjectList != null)
-    {
-        <p class="mb-4">Inloggad mäklare: @MySalesObjectList.FirstOrDefault()?.RealEstateAgent.FirstName @MySalesObjectList.FirstOrDefault().RealEstateAgent.LastName</p>
-    }
-}
-<div>
-    <button class="btn btn-primary" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
-</div>
-
-@if (MySalesObjectList == null)
-{
-    <p class="text-danger mb-4">Inga försäljningsobject för inloggad mäklare.</p>
-}
-else
-{
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Adress</th>
-                    <th>Beskrivning</th>
-                    <th>Utgångspris</th>
-                    <th>Kategori</th>
-                    <th>Kommun</th>
-                    <th>Redigera</th>
-                    <th>Ta bort</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in MySalesObjectList)
-                {
-                    <tr>
-                        <td>
-                            @if (item.IsActive == false)
-                            {
-                                <span class="badge bg-danger">Inaktiv</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-success">Aktiv</span>
-                            }
-                        </td>
-                        <td>@item.Address</td>
-                        <td style="max-width: 500px;">@item.Description</td>
-                        <td>@item.StartingPrice.ToString("N0") kr</td>
-                        <td>@item.Category.Name</td>
-                        <td>@item.Municipality.Name</td>
-                        <td><button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button></td>
-                        <td><button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<div class="card">
+    <div class="card-header">
+        <h1 class="mb-3 display-4">Mina försäljningsobjekt</h1>
     </div>
-}
+    <div class="card-body">
+        <div class="mb-3">
+            <button class="btn btn-primary" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
+            <button class="btn btn-info" @onclick="NavigateToEditAgent">Redigera användaruppgifter</button>
+        </div>
+
+        @if (MySalesObjectList == null)
+        {
+            <p class="text-danger mb-4">Inga försäljningsobject för inloggad mäklare.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Adress</th>
+                            <th>Beskrivning</th>
+                            <th>Utgångspris</th>
+                            <th>Kategori</th>
+                            <th>Kommun</th>
+                            <th>Redigera</th>
+                            <th>Ta bort</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in MySalesObjectList)
+                        {
+                            <tr>
+                                <td>
+                                    @if (item.IsActive == false)
+                                    {
+                                        <span class="badge bg-danger">Inaktiv</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Aktiv</span>
+                                    }
+                                </td>
+                                <td>@item.Address</td>
+                                <td style="max-width: 500px;">@item.Description</td>
+                                <td>@item.StartingPrice.ToString("N0") kr</td>
+                                <td>@item.Category.Name</td>
+                                <td>@item.Municipality.Name</td>
+                                <td><button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button></td>
+                                <td><button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
 
 @code
 {
@@ -113,6 +111,10 @@ else
     {
         string previousPageUrl = "/SalesObject/REAgentSalesObjects";
         navMan.NavigateTo($"/SalesObject/EditSalesObject/{id}?previousPage={previousPageUrl}");
+    }
+    public void NavigateToEditAgent()
+    {
+        navMan.NavigateTo($"/RealEstateAgent/EditRealEstateAgent/{CurrentUser}");
     }
     private async Task NavigateToDeleteSalesObject(int id)
     {

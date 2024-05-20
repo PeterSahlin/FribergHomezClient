@@ -1,6 +1,28 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /*background-color: #f0f0f0;*/ /* This will be your background color */
+    position: relative;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Ensure body takes full viewport height */
+    z-index: 1;
 }
+
+    body::before {
+        content: "";
+        position: fixed; /* Fixed to the viewport */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("/images/fribergHomezBackground.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+        opacity: 0.4; /* Adjust the opacity of the background image */
+        z-index: -1; /* Ensure it's behind other content */
+    }
 
 h1:focus {
     outline: none;

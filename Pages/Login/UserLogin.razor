@@ -1,13 +1,17 @@
 ﻿@page "/Login/UserLogin"
-@using FribergHomezClient.Models
+@using Blazored.LocalStorage
+@* @using FribergHomezClient.Models *@
 @using System.Net.Http.Json
 @using System.Text.Json
 @using FribergHomezClient.Services.Authentication
 @using FribergHomezClient.Services.Base
+@using FribergHomezClient.Services.ModelService
 @inject HttpClient httpClient
 @inject NavigationManager navMan
 @inject IJSRuntime JSRuntime
 @inject IAuthenticationService authService
+@inject ILocalStorageService localStorage
+@inject IRealEstateAgentService realEstateAgentService
 
 
 @* <div class="container mt-5">
@@ -66,11 +70,8 @@
 @code
 {
     public LoginDTO NewLogin { get; set; } = new LoginDTO();
-
-    protected override async Task OnInitializedAsync()
-    {
-
-    }
+    private string CurrentUser { get; set; }
+    private RealEstateAgent agent { get; set; }
 
     public async Task HandleLogin()
     {
@@ -80,8 +81,22 @@
             var response = await authService.AuthenticateAsync(NewLogin);
             if (response)
             {
-                // Successfully authenticated, navigate to the start page
+                // Successfully authenticated, store user ID in local storage
+                var userId = await localStorage.GetItemAsync<string>("userId");
+                CurrentUser = userId;
+
+                // Fetch the user details
+                var agentResponse = await realEstateAgentService.GetRealEstateAgentByIdAsync(CurrentUser);
+                if (agentResponse.Success)
+                {
+                    agent = agentResponse.Data;
+                }
+
+                // Navigate to the start page
                 navMan.NavigateTo("/");
+
+                // Refresh the component state
+                StateHasChanged();
             }
             else
             {
@@ -124,6 +139,4 @@
     {
         await JSRuntime.InvokeVoidAsync("history.back");
     }
-
-
 }
