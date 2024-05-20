@@ -4,6 +4,7 @@ namespace FribergHomezClient.Services.ModelService
 {
     public interface ICategoryService
     {
+        //Thomas
         Task<Response<List<Category>>> GetCategoriesAsync();
 
         Task<Response<Category>> GetCategoryByIdAsync(int categoryId);

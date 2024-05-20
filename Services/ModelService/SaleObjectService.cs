@@ -6,6 +6,7 @@ namespace FribergHomezClient.Services.ModelService
 {
     public class SaleObjectService : BaseHttpService, ISaleObjectService
     {
+        //Henrik
         private readonly IClient client;
         public SaleObjectService(ILocalStorageService localStorage, IClient client) : base(localStorage, client)
         {

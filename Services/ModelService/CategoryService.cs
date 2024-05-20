@@ -6,6 +6,7 @@ namespace FribergHomezClient.Services.ModelService
 {
     public class CategoryService : BaseHttpService, ICategoryService
     {
+        //Thomas
         private readonly IClient client;
         public CategoryService(ILocalStorageService localStorage, IClient client) : base(localStorage, client)
         {
