@@ -96,12 +96,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-
-        //Response<List<Firm>> response = await firmService.GetFirmsAsync();
-
-
-
-        // var response = await httpClient.GetAsync("api/Firm");
+        
         var response = await firmService.GetFirmsAsync();
 
         if (response.Success)
@@ -127,7 +122,10 @@
             }
         }
 
-
+        if (agentToAdd.ImageUrl == null)
+        {
+            agentToAdd.ImageUrl = "https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png";
+        }
 
         try
         {
