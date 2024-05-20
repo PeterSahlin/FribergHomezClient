@@ -12,7 +12,7 @@
     {
         <div class="card mb-4">
             <div class="card-header">
-                <h3 class="card-title">@firm.Name</h3>
+                <h1 class="card-title display-4">@firm.Name</h1>
             </div>
             <div class="card-body">
                 <p class="card-text">@firm.Presentation</p>
@@ -20,7 +20,7 @@
         </div>
         @if (agents != null && agents.Any())
         {
-            <h4 class="mb-3">Mäklare för @firm.Name</h4>
+            <h4 class="mb-3 display-6" >Mäklare för @firm.Name</h4>
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
                 @foreach (var agent in agents)
                 {
@@ -46,6 +46,7 @@
         {
             <p>Hittade inga mäklare för denna firma...</p>
         }
+                            <button class="btn btn-primary mt-2" style="background-color:#4F709C; border-color:#4F709C;" @onclick="ReturnToPreviousPage">Tillbaka till alla</button>
     }
 </div>
 
@@ -72,5 +73,10 @@
             }
         }
 
+    }
+
+    private void ReturnToPreviousPage()
+    {
+        navMan.NavigateTo("/Firm/ListAllFirms");
     }
 }

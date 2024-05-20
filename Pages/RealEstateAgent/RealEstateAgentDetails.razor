@@ -51,16 +51,7 @@
                         </div>
                     </div>
 
-                    @*  <p>Status: </p>
-                @if (CurrentRealEstateAgent.IsActive == true)
-                {
-                <p>Aktiv</p>
-                }
-                else
-                {
-                <p>Inaktiv</p>
-                } *@
-                    <button class="btn btn-info" @onclick="BackButton">Tillbaka</button>
+                    <button class="btn btn-info" style="background-color:lightgray; border-color:lightgray;" @onclick="BackButton">Tillbaka</button>
                 </div>
             }
         </div>

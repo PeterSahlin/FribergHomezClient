@@ -53,7 +53,7 @@
     <div class="col-md-3">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Bildurl" @bind="addNewImgUrl" />
-            <button type="button" class="btn btn-primary" @onclick="AddImgUrl">Lägg till bild</button>
+            <button type="button" class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="AddImgUrl">Lägg till bild</button>
         </div>
         @if (showPopup)
         {
@@ -100,7 +100,7 @@
         <div class="col-md-3 mb-3">
             <div class="image-container">
                 <img class="img-fluid" src="@imageUrl" alt="Image" />
-                <button type="button" class="btn btn-danger btn-sm mt-2" @onclick="() => RemoveImgUrl(imageUrl)">Remove</button>
+                <button type="button" class="btn btn-danger btn-sm mt-2"  style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="() => RemoveImgUrl(imageUrl)">Remove</button>
             </div>
         </div>
     }
@@ -108,8 +108,8 @@
 
 <div class="row mb-3">
     <div class="col-md-6">
-        <button class="btn btn-success me-2" @onclick="AddNewSaleObject">Spara</button>
-        <button class="btn btn-danger" @onclick="ReturnToPreviousPage">Avbryt</button>
+        <button class="btn btn-success me-2" style="background-color:#4F6F52; border-color:#4F6F52;" @onclick="AddNewSaleObject">Spara</button>
+        <button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="ReturnToPreviousPage">Avbryt</button>
     </div>
 </div>
 @code {

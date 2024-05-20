@@ -40,7 +40,7 @@ else
       
             <div class="d-flex justify-content-between align-items-center mb-3">
 
-                <button class="btn btn-primary" @onclick="NavigateToAddRealEstateAgentPage">Lägg till mäklare</button>
+                    <button class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="NavigateToAddRealEstateAgentPage">Lägg till mäklare</button>
             </div>
 
         </Authorized>
@@ -80,9 +80,9 @@ else
                             <div class="col text-center py-3">
                                 <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
                                     <Authorized>
-                                        <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
-                                        <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
-                                        <button class="btn btn-danger" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                            <button class="btn btn-info" style="background-color:lightgray; border-color:lightgray;" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
+                                            <button class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+                                            <button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
                                     </Authorized>
                                 </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                             </div>
@@ -129,9 +129,9 @@ else
                             <div class="col text-center py-3">
                                 <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
                                     <Authorized>
-                                        <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
-                                        <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
-                                        <button class="btn btn-danger" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                            <button class="btn btn-info" style="background-color:lightgray; border-color:lightgray;" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
+                                            <button class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+                                            <button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
                                     </Authorized>
                                 </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                             </div>
@@ -175,9 +175,9 @@ else
                             <div class="col text-center py-3">
                                 <Microsoft.AspNetCore.Components.Authorization.AuthorizeView Roles="Administrator">
                                     <Authorized>
-                                        <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
-                                        <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
-                                        <button class="btn btn-danger" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                            <button class="btn btn-info" style="background-color:lightgray; border-color:lightgray;" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
+                                            <button class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+                                            <button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
                                     </Authorized>
                                 </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                             </div>
@@ -227,11 +227,9 @@ else
                                 </div>
                                 <div class="row g-0 mt-auto">
                                     <div class="col text-center py-3">
-                                        <button class="btn btn-info" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
-
-                                        <button class="btn btn-warning" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
-
-                                        <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteInactiveRealEstateAgent(item.Id))">Ta bort</button>
+                                            <button class="btn btn-info" style="background-color:lightgray; border-color:lightgray;" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
+                                            <button class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
+                                            <button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
                                     </div>
                                     <br />
                                 </div>

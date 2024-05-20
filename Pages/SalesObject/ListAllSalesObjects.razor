@@ -21,14 +21,14 @@
         <div>
             <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                 <Authorized>
-            <button class="btn btn-primary" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
+                    <button class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
                 </Authorized>
             </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
         </div>
         <div class="input-group" style="max-width: 400px;">
             <input class="form-control" placeholder="Sök..." @bind="searchItem" />
-            <button class="btn btn-outline-secondary" type="button" @onclick="SearchAsync">Sök</button>
-            <button class="btn btn-outline-secondary" type="button" @onclick="ResetSearch">Rensa</button>
+            <button class="btn btn-info" style="background-color:lightgray; border-color:gray;" type="button" @onclick="SearchAsync">Sök</button>
+            <button class="btn btn-info" style="background-color:lightgray; border-color:gray;" type="button" @onclick="ResetSearch">Rensa</button>
         </div>
         <div>
             <label for="municipalityDropdown" class="me-2">Välj kommun:</label>
@@ -82,11 +82,11 @@
                                     <p class="card-text">Boarea: @item.LivingArea m²</p>
                                 </div>
                             </a>
-                            <button class="btn btn-info" style="background-color:lightslategrey;" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button>
+                            <button class="btn btn-info" style="background-color:lightgray; border-color:lightgray;" @onclick="@(e => NavigateToSalesObjectDetails(item.Id))">Detaljer</button>
                             <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                                 <Authorized>
-                            <button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button>
-                            <button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSaleObject(item.Id))">Ta bort</button>
+                                    <button class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button>
+                                    <button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="@(e => NavigateToDeleteSaleObject(item.Id))">Ta bort</button>
                                 </Authorized>
                             </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
                         </div>

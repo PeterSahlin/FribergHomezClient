@@ -56,7 +56,7 @@
                     <div class="col-md-3">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Bildurl" @bind="addNewImgUrl" />
-                            <button type="button" class="btn btn-primary" @onclick="AddImgUrl">Lägg till bild</button>
+                            <button type="button" class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="AddImgUrl">Lägg till bild</button>
                         </div>
                         @if (showPopup)
                         {
@@ -74,7 +74,7 @@
                         <div class="col-md-3 mb-3">
                             <div class="image-container">
                                 <img class="img-fluid" src="@image" alt="Image" />
-                                <button type="button" class="btn btn-danger btn-sm mt-2" @onclick="() => RemoveImgUrl(image)">Remove</button>
+                                <button type="button" class="btn btn-danger btn-sm mt-2" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="() => RemoveImgUrl(image)">Remove</button>
                             </div>
                         </div>
                     }
@@ -111,8 +111,8 @@
 
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <button class="btn btn-success me-2" type="submit">Spara</button>
-                        <button class="btn btn-danger" @onclick="BackButton">Avbryt</button>
+                        <button class="btn btn-success me-2" style="background-color:#4F6F52; border-color:#4F6F52;" type="submit">Spara</button>
+                        <button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="BackButton">Avbryt</button>
                     </div>
                 </div>
             </form>
@@ -120,112 +120,6 @@
     </div>
 </div>
 
-@* <h3>Redigera försäljningsobjekt</h3>
-@if (saleObject != null)
-{
-    <form @onsubmit="@(e => {UpdateStatus(StatusValue); UpdateSaleObject();  })">
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <input type="text" class="form-control" placeholder="Adress" @bind="saleObject.Address" required />
-        </div>
-        <div class="col-md-3">
-            <input type="number" class="form-control" placeholder="Utgångspris" @bind="saleObject.StartingPrice" />
-        </div>
-        <div class="col-md-3">
-            <input type="number" class="form-control" placeholder="Boarea" @bind="saleObject.LivingArea" />
-        </div>
-        <div class="col-md-3">
-            <input type="number" class="form-control" placeholder="Biarea" @bind="saleObject.AncillaryArea" />
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <input type="number" class="form-control" placeholder="Tomtarea" @bind="saleObject.PlotArea" />
-        </div>
-        <div class="col-md-3">
-            <input type="text" class="form-control" placeholder="Beskrivning" @bind="saleObject.Description" />
-        </div>
-        <div class="col-md-3">
-            <input type="number" class="form-control" placeholder="Antal rum" @bind="saleObject.NumberOfRooms" />
-        </div>
-        <div class="col-md-3">
-            <input type="number" class="form-control" placeholder="Månadsavgift" @bind="saleObject.MonthlyFee" />
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <input type="number" class="form-control" placeholder="Årsavgift" @bind="saleObject.OperatingCostPerYear" />
-        </div>
-        <div class="col-md-3">
-            <input type="number" class="form-control" placeholder="Byggår" @bind="saleObject.YearOfConstruction" />
-        </div>
-        <div class="col-md-3">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Bildurl" @bind="addNewImgUrl" />
-                <button type="button" class="btn btn-primary" @onclick="AddImgUrl">Lägg till bild</button>
-            </div>
-            @if (showPopup)
-            {
-                <div class="popup">
-                    <span class="popuptext">Bild tillagd!</span>
-                </div>
-            }
-        </div>
-        <div class="col-md-3"></div>
-    </div>
-
-    <div class="row mb-3">
-        @foreach (var image in saleObject.ImageUrl)
-        {
-            <div class="col-md-3 mb-3">
-                <div class="image-container">
-                    <img class="img-fluid" src="@image" alt="Image" />
-                    <button type="button" class="btn btn-danger btn-sm mt-2" @onclick="() => RemoveImgUrl(image)">Remove</button>
-                </div>
-            </div>
-        }
-    </div>
-        <div>
-
-            <select id="realEstateAgentDropDown" class="btn btn-secondary btn-sm dropdown-toggle mt-3 mb-3"
-                placeholder="Mäklare" @bind="saleObject.RealEstateAgentId">
-                <option>Välj mäklare</option>
-                @foreach (var agent in RealEstateAgents)
-                {
-                    <option value="@agent.Id">@agent.FirstName @agent.LastName</option>
-                }
-            </select>
-        </div>
-
-    <div class="row mb-3">
-        <div class="col-auto">
-            <input class="btn-check mb-3" type="radio" id="activeRadio" name="status" value="1" @onclick="@(e => StatusValue = 1)">
-            <label class="btn btn-outline-success btn-sm" for="activeRadio">Aktiv</label>
-        </div>
-        <div class="col-auto">
-            <input type="radio" class="btn-check" id="inactiveRadio" name="status" value="0" @onclick="@(e => StatusValue = 0)">
-            <label class="btn btn-outline-danger btn-sm" for="inactiveRadio">Inaktiv</label>
-        </div>
-    </div>
-
-    @if (showStatusPopup)
-    {
-
-        <div class="popup">
-            <span class="popuptext" style="color:red;">Du måste göra ett val.</span>
-        </div>
-    }
-
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <button class="btn btn-success me-2" type="submit">Spara</button>
-            <button class="btn btn-danger" @onclick="BackButton">Avbryt</button>
-        </div>
-    </div>
-    </form>
-} *@
 @code {
 
 
@@ -269,13 +163,13 @@
                 };
         }
 
-        //var categoryResponse = await httpClient.GetAsync("/api/Category");
+      
         var categoryResponse = await categoryService.GetCategoriesAsync();
         if (categoryResponse.Success)
         {
             Categories = categoryResponse.Data;
         }
-        // var municipalityResponse = await httpClient.GetAsync("/api/municipalities");
+        
         var municipalityResponse = await municipalityService.GetMunicipalitiesAsync();
         if (municipalityResponse.Success)
         {

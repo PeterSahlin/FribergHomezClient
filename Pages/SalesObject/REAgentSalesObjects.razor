@@ -28,8 +28,8 @@
     </div>
     <div class="card-body">
         <div class="mb-3">
-            <button class="btn btn-primary" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
-            <button class="btn btn-info" @onclick="NavigateToEditAgent">Redigera användaruppgifter</button>
+            <button class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="NavigateToAddSalesObjectPage">Lägg till nytt objekt</button>
+            <button class="btn btn-info" style="background-color:lightgray; border-color:lightgray;" @onclick="NavigateToEditAgent">Redigera användaruppgifter</button>
         </div>
 
         @if (MySalesObjectList == null)
@@ -71,8 +71,8 @@
                                 <td>@item.StartingPrice.ToString("N0") kr</td>
                                 <td>@item.Category.Name</td>
                                 <td>@item.Municipality.Name</td>
-                                <td><button class="btn btn-warning" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button></td>
-                                <td><button class="btn btn-danger" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button></td>
+                                <td><button class="btn btn-warning" style="background-color:lightgray; border-color:lightgray;" @onclick="@(e => NavigateToEditSalesObject(item.Id))">Redigera</button></td>
+                                <td><button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="@(e => NavigateToDeleteSalesObject(item.Id))">Ta bort</button></td>
                             </tr>
                         }
                     </tbody>
