@@ -229,7 +229,7 @@ else
                                     <div class="col text-center py-3">
                                             <button class="btn btn-info" style="background-color:lightgray; border-color:lightgray;" @onclick="@(e => NavigateToRealEstateAgentDetails(item.Id))">Detaljer</button>
                                             <button class="btn btn-primary" style="background-color:#4F709C; border-color:#4F709C;" @onclick="@(e => NavigateToEditRealEstateAgent(item.Id))">Redigera</button>
-                                            <button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="@(e => SetAgentInactive(item.Id))">Ta bort</button>
+                                            <button class="btn btn-danger" style="background-color:#B73E3E; border-color:#B73E3E;" @onclick="@(e => NavigateToDeleteInactiveRealEstateAgent(item.Id))">Ta bort</button>
                                     </div>
                                     <br />
                                 </div>
